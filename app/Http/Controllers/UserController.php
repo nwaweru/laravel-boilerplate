@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -14,14 +16,46 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @return Factory|View
+     * @throws Exception
      */
     public function index()
     {
-        $users = User::all();
+        $this->authorize('users.index');
 
-        return view('users.index', [
-            'users' => $users,
-        ]);
+        if (request()->ajax()) {
+            $users = User::query();
+
+            return DataTables::of($users)
+                ->addColumn('name', function ($user) {
+                    return $user->first_name.' '.$user->last_name;
+                })
+                ->addColumn('roles', function ($user) {
+                    return $user->getRoleNames();
+                })
+                ->addColumn('actions', function ($user) {
+                    $actions = '';
+
+                    if (auth()->user()->can('users.delete')) {
+                        $actions .= '<a href="'.route('users.delete',
+                                ['user' => $user->uuid]).'" class="card-link text-danger">Delete</a>';
+                    }
+
+                    if (auth()->user()->can('users.edit')) {
+                        $actions .= '<a href="'.route('users.edit',
+                                ['user' => $user->uuid]).'" class="card-link">Edit</a>';
+                    }
+
+                    if (auth()->user()->can('users.show')) {
+                        $actions .= '<a href="'.route('users.show',
+                                ['user' => $user->uuid]).'" class="card-link">View</a>';
+                    }
+
+                    return $actions;
+                })
+                ->make(true);
+        }
+
+        return view('users.index');
     }
 
     /**
