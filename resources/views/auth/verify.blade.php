@@ -9,11 +9,13 @@
                 </div>
                 @if (session('resent'))
                     <hr class="w-25">
-                    <p class="text-success text-center">A fresh verification link has been sent to {{ Auth::user()->name }}.</p>
+                    <p class="text-success text-center">A fresh verification link has been sent
+                        to {{ Auth::user()->name }}.</p>
                     <hr class="w-25">
                 @endif
                 <div class="mt-2">
-                    <p>Hello <b>{{ Auth::user()->name }}</b>. You are almost ready to access <b>{{ config('app.name') }}</b>.</p>
+                    <p>Hello <b>{{ Auth::user()->name }}</b>. You are almost ready to access
+                        <b>{{ config('app.name') }}</b>.</p>
                     <p>{{ __('Before proceeding, please check your email for a verification link.') }}</p>
                 </div>
                 <form class="pt-2" method="POST" action="{{ route('verification.resend') }}">
