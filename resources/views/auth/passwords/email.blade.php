@@ -7,7 +7,7 @@
                 <div class="brand-logo">
                     <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
                 </div>
-                <h4>{{ __('Reset Password') }}</h4>
+                <h1>{{ __('Reset Password') }}</h1>
                 @if (session('status'))
                     <div class="alert alert-success mt-3 mb-0 text-center" role="alert">
                         {{ session('status') }}

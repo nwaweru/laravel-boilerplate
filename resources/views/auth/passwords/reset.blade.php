@@ -7,7 +7,7 @@
                 <div class="brand-logo">
                     <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
                 </div>
-                <h4>{{ __('Reset Password') }}</h4>
+                <h1>{{ __('Reset Password') }}</h1>
                 <form class="pt-3" method="POST" action="{{ route('password.update') }}" novalidate>
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">

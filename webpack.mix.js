@@ -16,7 +16,9 @@ mix.sass('resources/sass/app.scss', 'public/css');
 mix.styles([
     'public/css/app.css',
     'node_modules/perfect-scrollbar/css/perfect-scrollbar.css',
-    'resources/themes/purple-admin/css/style.css'
+    'resources/themes/purple-admin/css/style.css',
+    'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
+    'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.css'
 ], 'public/css/style.css');
 
 // Create public/css/illustrated-errors.css
@@ -36,5 +38,10 @@ mix.scripts([
     'node_modules/perfect-scrollbar/dist/perfect-scrollbar.js',
     'resources/themes/purple-admin/js/off-canvas.js',
     'resources/themes/purple-admin/js/hoverable-collapse.js',
-    'resources/themes/purple-admin/js/misc.js'
+    'resources/themes/purple-admin/js/misc.js',
+    'node_modules/datatables.net/js/jquery.dataTables.js',
+    'node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js',
+    'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
+    'node_modules/datatables.net-responsive-bs4/js/responsive.bootstrap4.js',
+    'resources/js/custom.js'
 ], 'public/js/script.js');
