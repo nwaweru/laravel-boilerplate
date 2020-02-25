@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-// Create public/app.css
+// Create public/css/app.css
 mix.sass('resources/sass/app.scss', 'public/css');
 mix.styles([
     'public/css/app.css',
@@ -19,12 +19,15 @@ mix.styles([
     'resources/themes/purple-admin/css/style.css'
 ], 'public/css/style.css');
 
+// Create public/css/illustrated-errors.css
+mix.copy('resources/css/illustrated-errors.css', 'public/css/illustrated-errors.css');
+
 // Copy purple-admin fonts to public/fonts directory.
 mix.copyDirectory('resources/themes/purple-admin/fonts', 'public/fonts');
 
-// Copy purple-admin logos to  public/img directory.
-mix.copy('resources/themes/purple-admin/images/logo.svg', 'public/img/purple-admin/logo.svg');
-mix.copy('resources/themes/purple-admin/images/logo-mini.svg', 'public/img/purple-admin/logo-mini.svg');
+// Create public/img directory.
+mix.copyDirectory('resources/img', 'public/img');
+mix.copyDirectory('resources/themes/purple-admin/images', 'public/img/purple-admin');
 
 // Create public/js/app.js
 mix.js('resources/js/app.js', 'public/js');

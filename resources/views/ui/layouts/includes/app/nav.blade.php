@@ -1,9 +1,9 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="{{ route('welcome') }}">
+        <a class="navbar-brand brand-logo" href="{{ route('home') }}">
             <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}"/>
         </a>
-        <a class="navbar-brand brand-logo-mini" href="{{ route('welcome') }}">
+        <a class="navbar-brand brand-logo-mini" href="{{ route('home') }}">
             <img src="{{ asset('img/purple-admin/logo-mini.svg') }}" alt="{{ config('app.name') }}"/>
         </a>
     </div>

@@ -16,7 +16,7 @@ You can read more about Laravel from [their website](http://laravel.com).
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within the project, please send an e-mail to [security@drash.co.ke](mailto:security@drash.co.ke). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within the project, please send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 

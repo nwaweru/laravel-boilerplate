@@ -6,7 +6,7 @@
         </span>
         <small class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">
             Made with <i class="mdi mdi-heart text-danger"></i> by
-            <a href="https://drash.co.ke" target="_blank" class="text-danger">Drash Interactive</a>
+            <a href="https://drash.co.ke" target="_blank" class="text-danger card-link">Drash Interactive</a>
         </small>
     </div>
 </footer>

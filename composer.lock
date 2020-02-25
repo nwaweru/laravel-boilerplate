@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc72d77014f9e3a553b7e3c42f388709",
+    "content-hash": "e0d6436c8a0c62114b05871a2dcedda2",
     "packages": [
         {
             "name": "creativeorange/gravatar",
@@ -792,6 +792,54 @@
                 "ui"
             ],
             "time": "2020-02-13T21:12:28+00:00"
+        },
+        {
+            "name": "laravelcollective/errors",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/LaravelCollective/errors.git",
+                "reference": "2c1ff5b31ec1c6607586eb8dd31d473cb99d3d6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/LaravelCollective/errors/zipball/2c1ff5b31ec1c6607586eb8dd31d473cb99d3d6e",
+                "reference": "2c1ff5b31ec1c6607586eb8dd31d473cb99d3d6e",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^6.0",
+                "php": ">=7.1.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Collective\\Errors\\ErrorsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Collective\\Errors\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Lantz",
+                    "email": "matt@laravelcollective.com"
+                }
+            ],
+            "description": "Error pages for the Laravel Framework",
+            "homepage": "https://laravelcollective.com",
+            "time": "2019-09-23T06:51:49+00:00"
         },
         {
             "name": "league/commonmark",
