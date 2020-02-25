@@ -23,4 +23,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', 'UserController');
 
     Route::resource('roles', 'RoleController');
+
+    Route::get('/auditing', 'AuditController@auditing')->name('auditing.index');
 });

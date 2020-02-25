@@ -20,7 +20,8 @@
             <li class="nav-item nav-profile">
                 <a class="nav-link" href="{{ route('home') }}">
                     <div class="nav-profile-img">
-                        <img src="{{ Gravatar::get(Auth::user()->email) }}" alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}'s Profile">
+                        <img src="{{ Gravatar::get(Auth::user()->email) }}"
+                             alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}'s Profile">
                     </div>
                     <div class="nav-profile-text">
                         <p class="mb-1 text-black">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</p>

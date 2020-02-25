@@ -38,6 +38,13 @@ class PermissionGroupsTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'id' => 4,
+                'uuid' => $this->generateUuid(),
+                'name' => 'Audit',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ];
 
         DB::table('permission_groups')->insert($groups);

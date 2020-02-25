@@ -14,7 +14,8 @@
                     <hr class="w-25">
                 @endif
                 <div class="mt-2">
-                    <p>Hello <b>{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</b>. You are almost ready to access
+                    <p>Hello <b>{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</b>. You are almost ready
+                        to access
                         <b>{{ config('app.name') }}</b>.</p>
                     <p>{{ __('Before proceeding, please check your email for a verification link.') }}</p>
                 </div>
