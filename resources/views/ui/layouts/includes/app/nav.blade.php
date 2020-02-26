@@ -1,9 +1,9 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="{{ route('welcome') }}">
+        <a class="navbar-brand brand-logo" href="{{ route('home') }}">
             <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}"/>
         </a>
-        <a class="navbar-brand brand-logo-mini" href="{{ route('welcome') }}">
+        <a class="navbar-brand brand-logo-mini" href="{{ route('home') }}">
             <img src="{{ asset('img/purple-admin/logo-mini.svg') }}" alt="{{ config('app.name') }}"/>
         </a>
     </div>
@@ -20,10 +20,11 @@
             <li class="nav-item nav-profile">
                 <a class="nav-link" href="{{ route('home') }}">
                     <div class="nav-profile-img">
-                        <img src="{{ Gravatar::get(Auth::user()->email) }}" alt="{{ Auth::user()->name }}'s Profile">
+                        <img src="{{ Gravatar::get(Auth::user()->email) }}"
+                             alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}'s Profile">
                     </div>
                     <div class="nav-profile-text">
-                        <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
+                        <p class="mb-1 text-black">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</p>
                     </div>
                 </a>
             </li>

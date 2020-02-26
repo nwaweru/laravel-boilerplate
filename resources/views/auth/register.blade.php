@@ -7,15 +7,26 @@
                 <div class="brand-logo">
                     <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
                 </div>
-                <h4>{{ __('Create Account') }}</h4>
+                <h1>{{ __('Create Account') }}</h1>
                 <form class="pt-3" method="POST" action="{{ route('register') }}" novalidate>
                     @csrf
                     <div class="form-group">
-                        <label for="name" class="sr-only">{{ __('Name') }}</label>
-                        <input type="text" id="name" name="name"
-                               class="form-control form-control-lg @error('name') is-invalid @enderror"
-                               value="{{ old('name') }}" required placeholder="Name" autofocus>
-                        @error('name')
+                        <label for="first_name" class="sr-only">{{ __('First Name') }}</label>
+                        <input type="text" id="first_name" name="first_name"
+                               class="form-control form-control-lg @error('first_name') is-invalid @enderror"
+                               value="{{ old('first_name') }}" required placeholder="First Name" autofocus>
+                        @error('first_name')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name" class="sr-only">{{ __('Last Name') }}</label>
+                        <input type="text" id="last_name" name="last_name"
+                               class="form-control form-control-lg @error('last_name') is-invalid @enderror"
+                               value="{{ old('last_name') }}" required placeholder="Last Name">
+                        @error('last_name')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

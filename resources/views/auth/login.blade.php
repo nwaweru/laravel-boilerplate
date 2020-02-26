@@ -7,7 +7,16 @@
                 <div class="brand-logo">
                     <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
                 </div>
-                <h4>{{ __('Login') }}</h4>
+                <p class="p-4 border border-success">
+                    <b>Administrator Demo</b>
+                    <br>
+                    Email: <code>jane.doe@example.com</code>
+                    <br>
+                    Password: <code>password</code>
+                    <br>
+                    <small class="text-primary">Customizable in <code>UsersTableSeeder</code></small>
+                </p>
+                <h1>{{ __('Login') }}</h1>
                 <form class="pt-3" method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
                     <div class="form-group">
