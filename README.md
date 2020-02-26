@@ -36,4 +36,4 @@ The project is open-sourced software licensed under the [MIT license](https://op
 Some other cool packages that might be added/needed:
 
 1. [laracasts/generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
-
+1. [laravel-test-factory-helper](https://github.com/mpociot/laravel-test-factory-helper)
