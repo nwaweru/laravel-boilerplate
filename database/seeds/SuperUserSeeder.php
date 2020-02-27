@@ -6,8 +6,9 @@ use App\Traits\Utilities;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 
-class UsersTableSeeder extends Seeder
+class SuperUserSeeder extends Seeder
 {
     use Utilities;
 
@@ -20,23 +21,19 @@ class UsersTableSeeder extends Seeder
     {
         Role::create([
             'uuid' => $this->generateUuid(),
-            'name' => 'user',
-            'display_name' => 'User',
-        ]);
+            'name' => 'super-user',
+            'display_name' => 'Super User',
+        ])->givePermissionTo(Permission::all());
 
         $user = User::create([
             'uuid' => $this->generateUuid(),
             'first_name' => 'Ndirangu',
             'last_name' => 'Waweru',
-            'email' => 'ndiranguwaweru@gmail.com',
+            'email' => 'nwaweru@drash.co.ke',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password')
         ]);
 
-        $user->assignRole('user');
-
-        if (app()->environment('local')) {
-            factory(User::class, 50)->create();
-        }
+        $user->assignRole('super-user');
     }
 }

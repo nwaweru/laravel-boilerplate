@@ -2,21 +2,34 @@
 
 A Laravel boilerplate with Purple Admin as the default theme.
 
-## Purple Admin
+## Included Packages
 
-> Purple admin template features a strikingly beautiful design that can instantly captivate user attention. Keeping up with the latest design trends, Purple Admin has a vibrant design along splendid gradient colors. All the components and the data visualization techniques in the template have a polished design that makes it suitable for the simplified presentation of complex data.
+- [Laravel Backup](https://github.com/spatie/laravel-backup)
+- [Laravel Permission](https://github.com/spatie/laravel-permission)
+- [Laravel Auditing](https://github.com/owen-it/laravel-auditing)
+- [Gravatar](https://github.com/creativeorange/gravatar)
+- [Laravel Illustrated Errors](https://github.com/laravelcollective/errors)
+- [Laravel Datatables](https://github.com/yajra/laravel-datatables)
+- [Laravel Sentry](https://github.com/getsentry/sentry-laravel)
+- [Laravel Generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
+- [Laravel Test Factory Helper](https://github.com/mpociot/laravel-test-factory-helper)
 
-You can preview the template from Bootstrap Dash [on their website](https://www.bootstrapdash.com/product/purple-free-admin-template) or view [the actual code](https://github.com/BootstrapDash/PurpleAdmin-Free-Admin-Template).
+## Installation
 
-## Laravel
+1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project.
+1. Update the ```.env``` with your project settings.
+1. Setup Laravel [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues).
+1. Update ```SuperUserSeeder``` and ```UsersTableSeeder``` with your details.
+1. Migrate and seed the database.
+1. Serve your project, explore and build something awesome.
 
-> Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects
+## Wish List
 
-You can read more about Laravel from [their website](http://laravel.com).
+New/missing features to be worked on:
 
-## Security Vulnerabilities
+## Communication
 
-If you discover a security vulnerability within the project, please send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com). All security vulnerabilities will be promptly addressed.
+Send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com) if you discover a security vulnerability or you would to see some feature(s) added.
 
 ## License
 

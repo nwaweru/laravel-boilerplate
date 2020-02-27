@@ -3,7 +3,7 @@
 @section('content')
     <div class="row flex-grow">
         <div class="col-lg-4 mx-auto">
-            <div class="auth-form-light text-left p-5">
+            <div class="auth-form-light p-5">
                 <div class="brand-logo">
                     <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
                 </div>
