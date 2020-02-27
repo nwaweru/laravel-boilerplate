@@ -9,6 +9,7 @@ use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\Auth\ResetPassword as ResetPasswordNotification;
+use App\Notifications\Auth\Verification as EmailVerificationNotification;
 
 class User extends Authenticatable implements Auditable, MustVerifyEmail
 {
@@ -42,6 +43,17 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     ];
 
     /**
+     * Send the email verification notification.
+     *
+     * @param string $token
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationNotification());
+    }
+
+    /**
      * Send the password reset notification.
      *
      * @param string $token
@@ -64,5 +76,15 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
         }
 
         return Gravatar::get($this->email);
+    }
+
+    /**
+     * Get the user's user roles.
+     *
+     * @return string
+     */
+    public function getRoleAttribute()
+    {
+        return implode(', ', $this->roles()->pluck('display_name')->toArray());
     }
 }

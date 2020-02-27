@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row flex-grow">
-    <div class="col-lg-4 mx-auto">
+    <div class="col-md-4 mx-auto">
         <div class="auth-form-light p-5">
             <h1>Reset Password</h1>
             <form class="pt-3" method="POST" action="{{ route('password.update') }}" novalidate>

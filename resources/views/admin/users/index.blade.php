@@ -14,9 +14,9 @@
                     <table id="users" class="table table-hover dt-responsive nowrap">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Name</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Role</th>
                             <th scope="col">&nbsp;</th>
                         </tr>
                         </thead>
@@ -37,16 +37,13 @@
                 scrollCollapse: true,
                 ajax: '{{ route('users.index') }}',
                 columns: [
-                    {data: 'name', name: 'name'},
+                    {data: 'first_name', name: 'first_name'},
+                    {data: 'last_name', name: 'last_name'},
                     {data: 'email', name: 'email'},
-                    {data: 'roles', name: 'roles'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false}
                 ],
                 createdRow: function (row, data, dataIndex) {
                     $(row).find('td:eq(3)').attr('class', 'text-right');
-                },
-                fnDrawCallback: function (settings) {
-                    $(settings.nTHead).hide();
                 }
             });
         });

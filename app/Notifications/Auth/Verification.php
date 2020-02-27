@@ -6,40 +6,27 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Carbon;
 
-class ResetPassword extends Notification implements ShouldQueue
+class Verification extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    /**
-     * The user.
-     *
-     * @var
-     */
-    public $user;
-
-    /**
-     * The password reset token.
-     *
-     * @var
-     */
-    public $token;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user, $token)
+    public function __construct()
     {
-        $this->user = $user;
-        $this->token = $token;
+        //
     }
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -50,22 +37,31 @@ class ResetPassword extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param mixed $notifiable
-     * @return MailMessage
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->subject('Reset Password')
-            ->markdown('emails.auth.passwords.reset', [
-                'user' => $this->user,
-                'token' => $this->token,
+        $url = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(config('auth.verification.expire')),
+            [
+                'id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ]
+        );
+
+        return (new MailMessage)->subject('Verify your Email Address')
+            ->markdown('emails.auth.verify', [
+                'user' => $notifiable,
+                'url' => $url,
             ]);
     }
 
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function toArray($notifiable)

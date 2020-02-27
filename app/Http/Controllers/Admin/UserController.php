@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -34,17 +35,19 @@ class UserController extends Controller
             $users = User::query();
 
             return DataTables::of($users)
-                ->addColumn('name', function ($user) {
-                    return $user->first_name . ' ' . $user->last_name;
-                })
-                ->addColumn('roles', function ($user) {
-                    $roles = $user->roles()->pluck('display_name')->toArray();
-                    return $roles;
+                ->addColumn('email', function ($user) {
+                    $email = '<a href="mailto:' . $user->email . '" class="card-link" title="Send E-mail" target="_blank">' . $user->email . '</a>';
+
+                    if ($user->role !== '') {
+                        $email .= ' <small class="text-muted">(' . $user->role . ')</small>';
+                    }
+
+                    return $email;
                 })
                 ->addColumn('actions', function ($user) {
                     $actions = '';
 
-                    if (auth()->user()->can('users.delete')) {
+                    if (auth()->user()->can('users.delete') && $user->role === '') {
                         $actions .= '<a href="' . route(
                             'users.delete',
                             ['user' => $user->uuid]
@@ -67,6 +70,7 @@ class UserController extends Controller
 
                     return $actions;
                 })
+                ->rawColumns(['email', 'actions'])
                 ->toJson(true);
         }
 
@@ -82,7 +86,11 @@ class UserController extends Controller
     {
         $this->authorize('users.create');
 
-        return view('admin.users.create');
+        $roles = Role::all();
+
+        return view('admin.users.create', [
+            'roles' => $roles,
+        ]);
     }
 
     /**
@@ -99,16 +107,22 @@ class UserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'roles' => ['nullable', 'exists:roles,id'],
         ]);
 
         try {
-            User::create([
+            $user = User::create([
                 'uuid' => $this->generateUuid(),
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => Hash::make($this->generateUuid()),
             ]);
+
+            if (!is_null($request->roles)) {
+                $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+                $user->assignRole($roles);
+            }
 
             return redirect()->route('users.index')->with([
                 'alert' => (object) [

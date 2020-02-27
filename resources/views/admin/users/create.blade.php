@@ -41,6 +41,17 @@
                         </span>
                         @enderror
                     </div>
+                    <div class="border border-dark p-3">
+                        @foreach ($roles as $role)
+                            <div class="form-check">
+                                <label class="form-check-label text-muted">
+                                    <input type="checkbox" id="role-{{ $role->uuid }}" name="roles[]"
+                                        class="form-check-input"
+                                        {{ (old('roles') && in_array($role->id, old('roles'))) ? 'checked' : null }}> {{ $role->display_name }}
+                                </label>
+                            </div>
+                        @endforeach
+                    </div>
                     <div class="form-group mt-3">
                         <button type="submit"
                                 class="btn btn-block btn-primary">

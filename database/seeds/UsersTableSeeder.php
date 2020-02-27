@@ -18,13 +18,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
-            'uuid' => $this->generateUuid(),
-            'name' => 'user',
-            'display_name' => 'User',
-        ]);
-
-        $user = User::create([
+        User::create([
             'uuid' => $this->generateUuid(),
             'first_name' => 'Ndirangu',
             'last_name' => 'Waweru',
@@ -32,8 +26,6 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password')
         ]);
-
-        $user->assignRole('user');
 
         if (app()->environment('local')) {
             factory(User::class, 50)->create();
