@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use App\Traits\Utilities;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -91,13 +93,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('users.create');
+
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
         ]);
-
-        $this->authorize('users.create');
 
         try {
             User::create([
@@ -129,10 +131,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param uuid $uuid
      * @return Response
      */
-    public function show($id)
+    public function show($uuid)
     {
         //
     }
@@ -140,34 +142,123 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param uuid $uuid
      * @return Response
      */
-    public function edit($id)
+    public function edit($uuid)
     {
-        //
+        $this->authorize('users.edit');
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        if ($user->uuid === Auth::user()->uuid) {
+            // Edit logged-in administrator profile instead.
+        }
+
+        return view('admin.users.edit', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
-     * @param  int  $id
+     * @param uuid $uuid
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
-        //
+        $this->authorize('users.edit');
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        try {
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+            ]);
+
+            return redirect()->back()->with([
+                'alert' => (object) [
+                    'type' => 'success',
+                    'text' => 'Changes Saved',
+                ],
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex);
+
+            return redirect()->back()->withInput()->with([
+                'alert' => (object) [
+                    'type' => 'danger',
+                    'text' => 'Database Error Occurred',
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Show the view for deleting the specified resource.
+     *
+     * @param uuid $uuid
+     * @return Response
+     */
+    public function delete($uuid)
+    {
+        $this->authorize('users.delete');
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        if ($user->uuid === Auth::user()->uuid) {
+            die('Can an admin really delete his account?');
+        }
+
+        return view('admin.users.delete', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param uuid $uuid
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($uuid)
     {
-        //
+        $this->authorize('users.delete');
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        if ($user->uuid === Auth::user()->uuid) {
+            die('Can an admin really delete his account?');
+        }
+
+        try {
+            $user->delete();
+
+            return redirect()->route('users.index')->with([
+                'alert' => (object) [
+                    'type' => 'success',
+                    'text' => 'User Deleted',
+                ],
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex);
+
+            return redirect()->back()->with([
+                'alert' => (object) [
+                    'type' => 'danger',
+                    'text' => 'Database Error Occurred',
+                ],
+            ]);
+        }
     }
 }
