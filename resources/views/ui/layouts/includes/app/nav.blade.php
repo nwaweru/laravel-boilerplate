@@ -18,12 +18,12 @@
                 </a>
             </li>
             <li class="nav-item nav-profile">
-                <a class="nav-link" href="{{ route('home') }}">
+                <a class="nav-link" href="{{ route('profile.edit', ['user' => Auth::user()->uuid]) }}">
                     <div class="nav-profile-img">
                         <img src="{{ Auth::user()->gravatar }}"
                              alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}'s Profile">
                     </div>
-                    <div class="nav-profile-text">
+                    <div class="nav-profile-text ml-2">
                         <p class="mb-1 text-black">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</p>
                     </div>
                 </a>

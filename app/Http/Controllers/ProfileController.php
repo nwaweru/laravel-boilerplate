@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Exception;
-use Illuminate\Contracts\View\Factory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
-use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -23,11 +20,7 @@ class ProfileController extends Controller
      */
     public function edit($uuid)
     {
-        $user = User::where('uuid', $uuid)->firstOrFail();
-
-        if (Auth::user()->uuid !== $user->uuid) {
-            abort(403);
-        }
+        $user = User::where('id', Auth::user()->id)->where('uuid', $uuid)->firstOrFail();
 
         return view('profile.edit', [
             'user' => $user,
@@ -43,7 +36,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $uuid)
     {
-        $user = User::where('uuid', $uuid)->firstOrFail();
+        $user = User::where('id', Auth::user()->id)->where('uuid', $uuid)->firstOrFail();
 
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -51,18 +44,23 @@ class ProfileController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
         ]);
 
-        if (Auth::user()->uuid !== $user->uuid) {
-            abort(403);
-        }
-
         try {
+            $currentEmail = $user->email;
+
             $user->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
             ]);
 
-            return redirect()->route('users.edit', ['user' => $user->uuid])->with([
+            if ($request->email !== $currentEmail) {
+                $user->update(['email_verified_at' => null]);
+                $user->sendEmailVerificationNotification();
+
+                return redirect()->route('home');
+            }
+
+            return redirect()->route('profile.edit', ['user' => $user->uuid])->with([
                 'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Changes Saved',

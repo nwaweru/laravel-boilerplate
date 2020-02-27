@@ -17,10 +17,15 @@ Auth::routes([
     'verify' => true,
 ]);
 
+Route::name('profile.')->middleware(['auth'])->group(function () {
+    Route::get('/profile/{user}/edit', 'ProfileController@edit')->name('edit');
+    Route::put('/profile/{user}', 'ProfileController@update')->name('update');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::namespace('Admin')->prefix('admin/')->group(function () {
+    Route::name('admin.')->namespace('Admin')->group(function () {
         Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
         Route::resource('users', 'UserController');
 
