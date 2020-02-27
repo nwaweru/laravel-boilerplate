@@ -3,7 +3,7 @@
         <li class="nav-item nav-profile">
             <a href="{{ route('home') }}" class="nav-link">
                 <div class="nav-profile-image">
-                    <img src="{{ Gravatar::get(Auth::user()->email) }}"
+                    <img src="{{ Auth::user()->gravatar }}"
                          alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}">
                 </div>
                 <div class="nav-profile-text d-flex flex-column">

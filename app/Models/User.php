@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
-use Spatie\Permission\Traits\HasRoles;
+use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\Auth\ResetPassword as ResetPasswordNotification;
 
 class User extends Authenticatable implements Auditable, MustVerifyEmail
@@ -49,5 +50,19 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($this, $token));
+    }
+
+    /**
+     * Get the user's gravatar.
+     *
+     * @return string
+     */
+    public function getGravatarAttribute()
+    {
+        if (app()->environment('local')) {
+            return asset('img/gravatar/default.png');
+        }
+
+        return Gravatar::get($this->email);
     }
 }
