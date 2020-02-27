@@ -8,6 +8,7 @@
         @include('ui.layouts.includes.app.sidebar')
         <div class="main-panel">
             <div class="content-wrapper">
+                @include('ui.layouts.includes.app.header')
                 @yield('content')
             </div>
             @include('ui.layouts.includes.app.footer')

@@ -2,11 +2,15 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Users</h4>
-                    <hr>
+                    <div class="clearfix">
+                        <h2 class="float-left">Users</h2>
+                        <a href="{{ route('users.create') }}" class="float-right btn btn-primary btn-sm">
+                            <i class="fas fa-fw fa-plus"></i> User
+                        </a>
+                    </div>
                     <table id="users" class="table table-hover dt-responsive nowrap">
                         <thead class="thead-dark">
                         <tr>
@@ -40,6 +44,9 @@
                 ],
                 createdRow: function (row, data, dataIndex) {
                     $(row).find('td:eq(3)').attr('class', 'text-right');
+                },
+                fnDrawCallback: function (settings) {
+                    $(settings.nTHead).hide();
                 }
             });
         });

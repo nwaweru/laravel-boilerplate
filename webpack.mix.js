@@ -21,8 +21,8 @@ mix.styles([
     'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.css'
 ], 'public/css/style.css');
 
-// Create public/css/illustrated-errors.css
-mix.copy('resources/css/illustrated-errors.css', 'public/css/illustrated-errors.css');
+// Copy raw CSS to public/css directory.
+mix.copyDirectory('resources/css', 'public/css');
 
 // Copy purple-admin fonts to public/fonts directory.
 mix.copyDirectory('resources/themes/purple-admin/fonts', 'public/fonts');

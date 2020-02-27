@@ -31,7 +31,8 @@ class UserController extends Controller
                     return $user->first_name . ' ' . $user->last_name;
                 })
                 ->addColumn('roles', function ($user) {
-                    return $user->getRoleNames();
+                    $roles = $user->roles()->pluck('display_name')->toArray();
+                    return $roles;
                 })
                 ->addColumn('actions', function ($user) {
                     $actions = '';
@@ -40,26 +41,26 @@ class UserController extends Controller
                         $actions .= '<a href="' . route(
                             'users.delete',
                             ['user' => $user->uuid]
-                        ) . '" class="card-link text-danger">Delete</a>';
+                        ) . '" class="card-link text-danger"><i class="fas fa-trash" title="Delete"></i></a>';
                     }
 
                     if (auth()->user()->can('users.edit')) {
                         $actions .= '<a href="' . route(
                             'users.edit',
                             ['user' => $user->uuid]
-                        ) . '" class="card-link">Edit</a>';
+                        ) . '" class="card-link"><i class="fas fa-edit" title="Edit"></i></a>';
                     }
 
                     if (auth()->user()->can('users.show')) {
                         $actions .= '<a href="' . route(
                             'users.show',
                             ['user' => $user->uuid]
-                        ) . '" class="card-link">View</a>';
+                        ) . '" class="card-link"><i class="fas fa-info" title="View"></i></a>';
                     }
 
                     return $actions;
                 })
-                ->make(true);
+                ->toJson(true);
         }
 
         return view('admin.users.index');
