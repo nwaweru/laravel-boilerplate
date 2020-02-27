@@ -8,7 +8,7 @@
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
                     <span class="font-weight-bold mb-2">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</span>
-                    <span class="text-secondary text-small">{{ Auth::user()->role }}</span>
+                    <span class="text-secondary text-small">{{ (Auth::user()->role) ? Auth::user()->role : 'Client' }}</span>
                 </div>
             </a>
         </li>

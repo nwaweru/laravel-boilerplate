@@ -9,7 +9,6 @@
         <div class="main-panel">
             @include('ui.components.alert')
             <div class="content-wrapper">
-                @include('ui.layouts.includes.app.header')
                 @yield('content')
             </div>
             @include('ui.layouts.includes.app.footer')
