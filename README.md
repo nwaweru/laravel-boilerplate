@@ -34,3 +34,7 @@ Send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwawe
 ## License
 
 The project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## TODO
+
+- Add a default image for gravatar (for offline browsing).
