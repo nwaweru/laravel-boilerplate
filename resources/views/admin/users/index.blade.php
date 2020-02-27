@@ -1,4 +1,4 @@
-@extends('ui.layouts.app', ['title' => 'Setup'])
+@extends('ui.layouts.app', ['title' => 'Users'])
 
 @section('content')
     <div class="row">

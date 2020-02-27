@@ -18,33 +18,31 @@
                 <i class="fas fa-home menu-icon"></i>
             </a>
         </li>
-        @canany(['users.index', 'roles.index'])
+        @canany(['users.index', 'roles.index', 'auditing.index'])
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setup" aria-expanded="false" aria-controls="setup">
-                    <span class="menu-title">Setup</span>
+                    <span class="menu-title">Admin</span>
                     <i class="menu-arrow"></i>
                     <i class="fas fa-cog menu-icon"></i>
                 </a>
                 <div class="collapse" id="setup">
                     <ul class="nav flex-column sub-menu">
-                        <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Users</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('roles.index') }}">Roles</a></li>
-                    </ul>
-                </div>
-            </li>
-        @endcanany
-        @canany(['auditing.index'])
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#setup" aria-expanded="false" aria-controls="setup">
-                    <span class="menu-title">Audit</span>
-                    <i class="menu-arrow"></i>
-                    <i class="fas fa-clipboard-list menu-icon"></i>
-                </a>
-                <div class="collapse" id="setup">
-                    <ul class="nav flex-column sub-menu">
+                        @can('users.index')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('auditing.index') }}">Laravel Auditing</a>
+                            <a class="nav-link" href="{{ route('users.index') }}">Users</a>
                         </li>
+                        @endcan
+                        @can('roles.index')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
+                        </li>
+                        @endcan
+                        @can('auditing.index')
+                        <li class="nav-item divider"></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('auditing.index') }}">Audits</a>
+                        </li>
+                        @endcan
                     </ul>
                 </div>
             </li>

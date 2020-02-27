@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Exception;
@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
 
             return DataTables::of($users)
                 ->addColumn('name', function ($user) {
-                    return $user->first_name.' '.$user->last_name;
+                    return $user->first_name . ' ' . $user->last_name;
                 })
                 ->addColumn('roles', function ($user) {
                     return $user->getRoleNames();
@@ -36,18 +37,24 @@ class UserController extends Controller
                     $actions = '';
 
                     if (auth()->user()->can('users.delete')) {
-                        $actions .= '<a href="'.route('users.delete',
-                                ['user' => $user->uuid]).'" class="card-link text-danger">Delete</a>';
+                        $actions .= '<a href="' . route(
+                            'users.delete',
+                            ['user' => $user->uuid]
+                        ) . '" class="card-link text-danger">Delete</a>';
                     }
 
                     if (auth()->user()->can('users.edit')) {
-                        $actions .= '<a href="'.route('users.edit',
-                                ['user' => $user->uuid]).'" class="card-link">Edit</a>';
+                        $actions .= '<a href="' . route(
+                            'users.edit',
+                            ['user' => $user->uuid]
+                        ) . '" class="card-link">Edit</a>';
                     }
 
                     if (auth()->user()->can('users.show')) {
-                        $actions .= '<a href="'.route('users.show',
-                                ['user' => $user->uuid]).'" class="card-link">View</a>';
+                        $actions .= '<a href="' . route(
+                            'users.show',
+                            ['user' => $user->uuid]
+                        ) . '" class="card-link">View</a>';
                     }
 
                     return $actions;
@@ -55,7 +62,7 @@ class UserController extends Controller
                 ->make(true);
         }
 
-        return view('users.index');
+        return view('admin.users.index');
     }
 
     /**

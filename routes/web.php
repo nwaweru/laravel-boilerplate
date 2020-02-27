@@ -20,10 +20,12 @@ Auth::routes([
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
-    Route::resource('users', 'UserController');
+    Route::namespace('Admin')->prefix('admin/')->group(function () {
+        Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
+        Route::resource('users', 'UserController');
 
-    Route::resource('roles', 'RoleController');
+        Route::resource('roles', 'RoleController');
 
-    Route::get('/auditing', 'AuditController@auditing')->name('auditing.index');
+        Route::get('/audits', 'AuditController@auditing')->name('auditing.index');
+    });
 });

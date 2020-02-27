@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
+use App\Http\Controllers\Controller;
 
 class AuditController extends Controller
 {
@@ -13,6 +14,6 @@ class AuditController extends Controller
      */
     public function auditing()
     {
-        return view('audit.auditing');
+        return view('admin.audit.auditing');
     }
 }
