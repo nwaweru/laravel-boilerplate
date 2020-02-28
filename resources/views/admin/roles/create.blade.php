@@ -3,9 +3,36 @@
 @section('content')
 <div class="row">
     <div class="col">
-        <form method="POST" action="{{ route('admin.permissions.store') }}" novalidate>
+        <form method="POST" action="{{ route('admin.roles.store') }}" novalidate>
             @csrf
             <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="pb-3">Create Role</h3>
+                            <div class="form-group">
+                                <label for="name" class="sr-only">Name</label>
+                                <input type="text" id="name" name="name"
+                                        class="form-control @error('name') is-invalid @enderror"
+                                        value="{{ old('name') }}" required placeholder="Name" autofocus>
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            @error('permissions')
+                            <p class="text-danger text-center">At least one permission required.</p>
+                            @enderror
+                            <div class="form-group mt-3 mb-0">
+                                <button type="submit"
+                                        class="btn btn-block btn-primary">
+                                    Create Role
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6 bg-white">
                     <div class="row">
                         @foreach ($permissionGroups as $group)
@@ -31,41 +58,6 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="pb-3">Create Role</h3>
-                            <div class="form-group">
-                                <label for="name" class="sr-only">Name</label>
-                                <input type="text" id="name" name="name"
-                                        class="form-control @error('name') is-invalid @enderror"
-                                        value="{{ old('name') }}" required placeholder="Name" autofocus>
-                                @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label for="display_name" class="sr-only">Display Name</label>
-                                <input type="text" id="display_name" name="display_name"
-                                        class="form-control @error('display_name') is-invalid @enderror"
-                                        value="{{ old('display_name') }}" required placeholder="Display Name">
-                                @error('display_name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="form-group mt-3 mb-0">
-                                <button type="submit"
-                                        class="btn btn-block btn-primary">
-                                    Create Role
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

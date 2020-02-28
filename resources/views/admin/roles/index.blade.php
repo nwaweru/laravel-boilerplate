@@ -11,15 +11,7 @@
                             <i class="fas fa-fw fa-plus"></i> Role
                         </a>
                     </div>
-                    <table id="roles" class="table table-hover dt-responsive nowrap">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Display Name</th>
-                            <th scope="col">&nbsp;</th>
-                        </tr>
-                        </thead>
-                    </table>
+                    <table id="roles" class="table table-hover dt-responsive nowrap"></table>
                 </div>
             </div>
         </div>
@@ -37,11 +29,13 @@
                 ajax: '{{ route('admin.roles.index') }}',
                 columns: [
                     {data: 'name', name: 'name'},
-                    {data: 'display_name', name: 'display_name'},
                     {data: 'actions', name: 'actions', orderable: false, searchable: false}
                 ],
                 createdRow: function (row, data, dataIndex) {
-                    $(row).find('td:eq(2)').attr('class', 'text-right');
+                    $(row).find('td:eq(1)').attr('class', 'text-right');
+                },
+                fnDrawCallback: function (settings) {
+                    $(settings.nTHead).hide();
                 }
             });
         });

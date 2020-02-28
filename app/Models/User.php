@@ -93,6 +93,6 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
      */
     public function getRoleAttribute()
     {
-        return implode(', ', $this->roles()->pluck('display_name')->toArray());
+        return implode(', ', $this->roles()->pluck('name')->toArray());
     }
 }

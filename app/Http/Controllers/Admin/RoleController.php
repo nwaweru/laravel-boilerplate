@@ -4,20 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PermissionGroup;
-use Carbon\Carbon;
+use App\Traits\Utilities;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+    use Utilities;
+
     /**
      * Display a listing of the resource.
      *
@@ -84,43 +86,22 @@ class RoleController extends Controller
         $this->authorize('roles.create');
 
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:roles'],
-            'roles' => ['required', 'exists:roles,id'],
+            'name' => ['required', 'unique:roles,name'],
+            'permissions' => ['required', 'exists:permissions,id'],
         ]);
 
         try {
-            $role = role::create([
+            $role = Role::create([
                 'uuid' => $this->generateUuid(),
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'email_verified_at' => Carbon::now(),
-                'password' => Hash::make('s3cr3t'),
+                'name' => $request->name,
             ]);
 
-            $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
-            $role->assignRole($roles);
-        } catch (Exception $ex) {
-            Log::error($ex);
+            $role->givePermissionTo(Permission::whereIn('id', $request->permissions)->pluck('name'));
 
-            return redirect()->back()->withInput()->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Internal Error Occurred',
-                ],
-            ]);
-        }
-
-        try {
-            $expires = now()->addDay();
-            $role->sendWelcomeNotification($expires);
-
-            return redirect()->route('roles.show', ['role' => $role->uuid])->with([
+            return redirect()->route('admin.roles.index')->with([
                 'alert' => (object) [
                     'type' => 'success',
-                    'text' => 'role Created',
+                    'text' => 'Role Created',
                 ],
             ]);
         } catch (Exception $ex) {
@@ -129,7 +110,7 @@ class RoleController extends Controller
             return redirect()->back()->withInput()->with([
                 'alert' => (object) [
                     'type' => 'danger',
-                    'text' => 'Notification Error Occurred',
+                    'text' => 'Database Error Occurred',
                 ],
             ]);
         }
