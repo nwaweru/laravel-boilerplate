@@ -49,7 +49,7 @@
                                     <input type="checkbox" id="role-{{ $role->uuid }}" name="roles[]"
                                         value="{{ $role->id }}" class="form-check-input"
                                         {{ (old('roles') && in_array($role->id, old('roles')) || in_array($role->id, $currentRoles) ? 'checked' : null) }}>
-                                    {{ $role->display_name }}
+                                    {{ $role->name }}
                                 </label>
                             </div>
                         @endforeach
