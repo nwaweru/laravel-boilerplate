@@ -26,4 +26,12 @@ trait Utilities
     {
         return $user->roles()->pluck('name')->toArray();
     }
+
+    /**
+     * Get an array of the user permissions.
+     */
+    public function getUserPermissions($user)
+    {
+        return $user->permissions()->pluck('name')->toArray();
+    }
 }

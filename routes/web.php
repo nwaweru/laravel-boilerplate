@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/roles/{role}/delete', 'RoleController@delete')->name('roles.delete');
         Route::resource('roles', 'RoleController');
 
+        Route::get('/permissions/{permission}/delete', 'PermissionController@delete')->name('permissions.delete');
         Route::resource('permissions', 'PermissionController');
 
         Route::get('/audits', 'AuditController@auditing')->name('auditing.index');

@@ -19,6 +19,7 @@ class CreatePermissionTables extends Migration
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('permission_group_id');
+            $table->uuid('uuid')->unique();
             $table->string('name')->unique();
             $table->string('display_name');
             $table->string('guard_name')->default('web');
