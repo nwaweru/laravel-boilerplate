@@ -1,38 +1,49 @@
-@extends('ui.layouts.app', ['title' => 'Setup'])
+@extends('ui.layouts.app', ['title' => 'Roles'])
 
 @section('content')
     <div class="row">
-        <div class="col-md-12 grid-margin stretch-card">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Users</h4>
-                    <hr>
-                    <table id="datatable" class="table table-hover">
-                        <thead>
+                    <div class="clearfix">
+                        <h1 class="float-left">Roles</h1>
+                        <a href="{{ route('admin.roles.create') }}" class="float-right btn btn-primary btn-sm">
+                            <i class="fas fa-fw fa-plus"></i> Role
+                        </a>
+                    </div>
+                    <table id="roles" class="table table-hover dt-responsive nowrap">
+                        <thead class="thead-dark">
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>&nbsp;</th>
+                            <th scope="col">Display Name</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">&nbsp;</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach($users as $user)
-                            <tr>
-                                <td>{{ $user->first_name . ' ' . $user->last_name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>Role</td>
-                                <td class="text-right">
-                                    <a href="#"><i class="fas fa-fw fa-trash text-danger" title="Delete"></i></a>
-                                    <a href="#"><i class="fas fa-fw fa-edit mx-3" title="Edit"></i></a>
-                                    <a href="#"><i class="fas fa-fw fa-eye" title="View"></i></a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function () {
+            $('#roles').DataTable({
+                responsive: true,
+                paging: false,
+                scrollY: '40vh',
+                scrollCollapse: true,
+                ajax: '{{ route('admin.roles.index') }}',
+                columns: [
+                    {data: 'display_name', name: 'display_name'},
+                    {data: 'name', name: 'name'},
+                    {data: 'actions', name: 'actions', orderable: false, searchable: false}
+                ],
+                createdRow: function (row, data, dataIndex) {
+                    $(row).find('td:eq(2)').attr('class', 'text-right');
+                }
+            });
+        });
+    </script>
+@endpush

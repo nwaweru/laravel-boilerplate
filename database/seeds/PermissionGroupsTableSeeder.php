@@ -19,12 +19,6 @@ class PermissionGroupsTableSeeder extends Seeder
         $groups = [
             [
                 'uuid' => $this->generateUuid(),
-                'name' => 'Pages',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'uuid' => $this->generateUuid(),
                 'name' => 'Users',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

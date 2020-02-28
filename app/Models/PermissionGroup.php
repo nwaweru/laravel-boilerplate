@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\Permission\Models\Permission;
 
 class PermissionGroup extends Model implements Auditable
 {
@@ -17,4 +18,12 @@ class PermissionGroup extends Model implements Auditable
     protected $fillable = [
         'uuid', 'name',
     ];
+
+    /**
+     * Get the permissions for the group.
+     */
+    public function permissions()
+    {
+        return $this->hasMany(Permission::class);
+    }
 }

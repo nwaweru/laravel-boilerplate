@@ -49,21 +49,21 @@ class UserController extends Controller
                 ->addColumn('actions', function ($user) {
                     $actions = '';
 
-                    if (auth()->user()->can('users.delete') && Auth::user()->id !== $user->id) {
+                    if (Auth::user()->can('users.delete') && Auth::user()->id !== $user->id) {
                         $actions .= '<a href="' . route(
                             'admin.users.delete',
                             ['user' => $user->uuid]
                         ) . '" class="card-link text-danger"><i class="fas fa-trash" title="Delete"></i></a>';
                     }
 
-                    if (auth()->user()->can('users.edit')) {
+                    if (Auth::user()->can('users.edit')) {
                         $actions .= '<a href="' . route(
                             'admin.users.edit',
                             ['user' => $user->uuid]
                         ) . '" class="card-link"><i class="fas fa-edit" title="Edit"></i></a>';
                     }
 
-                    if (auth()->user()->can('users.show')) {
+                    if (Auth::user()->can('users.show')) {
                         $actions .= '<a href="' . route(
                             'admin.users.show',
                             ['user' => $user->uuid]

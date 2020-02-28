@@ -5,4 +5,5 @@
     <title>{{ isset($title) ? $title : config('app.name') }}</title>
     <link rel="favicon" href="{{ asset('favicon.ico') }}"/>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @stack('styles')
 </head>

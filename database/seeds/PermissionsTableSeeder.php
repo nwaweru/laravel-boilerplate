@@ -3,8 +3,9 @@
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -19,118 +20,139 @@ class PermissionsTableSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $group = [
-            'pages' => PermissionGroup::where('name', 'Pages')->first(),
+        $permissionGroup = [
             'users' => PermissionGroup::where('name', 'Users')->first(),
             'roles' => PermissionGroup::where('name', 'Roles')->first(),
             'permissions' => PermissionGroup::where('name', 'Permissions')->first(),
             'audit' => PermissionGroup::where('name', 'Audit')->first(),
         ];
 
-        $pages = [
-            [
-                'group_id' => $group['pages']->id,
-                'name' => 'home',
-                'display_name' => 'Dashboard',
-            ],
-        ];
-
         $users = [
             [
-                'group_id' => $group['users']->id,
+                'permission_group_id' => $permissionGroup['users']->id,
                 'name' => 'users.index',
                 'display_name' => 'Browse',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['users']->id,
+                'permission_group_id' => $permissionGroup['users']->id,
                 'name' => 'users.create',
                 'display_name' => 'Create',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['users']->id,
+                'permission_group_id' => $permissionGroup['users']->id,
                 'name' => 'users.show',
                 'display_name' => 'Read',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['users']->id,
+                'permission_group_id' => $permissionGroup['users']->id,
                 'name' => 'users.edit',
                 'display_name' => 'Update',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['users']->id,
+                'permission_group_id' => $permissionGroup['users']->id,
                 'name' => 'users.delete',
                 'display_name' => 'Delete',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
         $roles = [
             [
-                'group_id' => $group['roles']->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
                 'name' => 'roles.index',
                 'display_name' => 'Browse',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['roles']->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
                 'name' => 'roles.create',
                 'display_name' => 'Create',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['roles']->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
                 'name' => 'roles.show',
                 'display_name' => 'Read',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['roles']->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
                 'name' => 'roles.edit',
                 'display_name' => 'Update',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['roles']->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
                 'name' => 'roles.delete',
                 'display_name' => 'Delete',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
         $permissions = [
             [
-                'group_id' => $group['permissions']->id,
+                'permission_group_id' => $permissionGroup['permissions']->id,
                 'name' => 'permissions.index',
                 'display_name' => 'Browse',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['permissions']->id,
+                'permission_group_id' => $permissionGroup['permissions']->id,
                 'name' => 'permissions.create',
                 'display_name' => 'Create',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['permissions']->id,
+                'permission_group_id' => $permissionGroup['permissions']->id,
                 'name' => 'permissions.show',
                 'display_name' => 'Read',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['permissions']->id,
+                'permission_group_id' => $permissionGroup['permissions']->id,
                 'name' => 'permissions.edit',
                 'display_name' => 'Update',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group['permissions']->id,
+                'permission_group_id' => $permissionGroup['permissions']->id,
                 'name' => 'permissions.delete',
                 'display_name' => 'Delete',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
         $audit = [
             [
-                'group_id' => $group['audit']->id,
+                'permission_group_id' => $permissionGroup['audit']->id,
                 'name' => 'auditing.index',
                 'display_name' => 'Laravel Auditing',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
-        $combined = array_merge($pages, $users, $roles, $permissions, $audit);
+        $mergedPermissions = array_merge($users, $roles, $permissions, $audit);
 
-        foreach ($combined as $permission) {
-            Permission::create($permission);
-        }
+        DB::table('permissions')->insert($mergedPermissions);
     }
 }

@@ -33,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
         Route::resource('users', 'UserController');
 
+        Route::get('/roles/{role}/delete', 'RoleController@delete')->name('roles.delete');
         Route::resource('roles', 'RoleController');
 
         Route::resource('permissions', 'PermissionController');
