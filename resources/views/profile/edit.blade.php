@@ -41,11 +41,7 @@
                         <label for="email" class="sr-only">Email</label>
                         <input type="email" id="email" name="email"
                                 class="form-control form-control-lg @error('email') is-invalid @enderror"
-                                value="{{ old('email') ?? $user->email }}" required placeholder="Email"
-                                aria-describedby="emailHelp">
-                        <div class="text-center">
-                            <small id="emailHelp" class="form-text text-danger">A new email will require verification.</small>
-                        </div>
+                                value="{{ old('email') ?? $user->email }}" required placeholder="Email">
                         @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
