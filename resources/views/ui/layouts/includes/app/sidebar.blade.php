@@ -18,7 +18,7 @@
                 <i class="fas fa-home menu-icon"></i>
             </a>
         </li>
-        @canany(['users.index', 'roles.index', 'auditing.index'])
+        @canany(['users.index', 'roles.index', 'permissions.index', 'auditing.index'])
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setup" aria-expanded="false" aria-controls="setup">
                     <span class="menu-title">Admin</span>
@@ -34,6 +34,11 @@
                         @can('roles.index')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.roles.index') }}">Roles</a>
+                        </li>
+                        @endcan
+                        @can('permissions.index')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.permissions.index') }}">Permissions</a>
                         </li>
                         @endcan
                         @can('auditing.index')

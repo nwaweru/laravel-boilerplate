@@ -6,22 +6,9 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="text-danger">Delete User?</h3>
-                <div class="table-responsive">
-                    <table class="table table-borderless">
-                        <tr>
-                            <td class="text-right">First Name:</td>
-                            <td><b>{{ $user->first_name }}</b></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Lasy Name:</td>
-                            <td><b>{{ $user->last_name }}</b></td>
-                        </tr>
-                        <tr>
-                            <td class="text-right">Email:</td>
-                            <td><b>{{ $user->email }}</b></td>
-                        </tr>
-                    </table>
-                </div>
+
+                @include('admin.users.includes.profile')
+                
                 <form class="pt-3" method="POST" action="{{ route('admin.users.destroy', ['user' => $user->uuid]) }}" novalidate>
                     @method('DELETE')
                     @csrf

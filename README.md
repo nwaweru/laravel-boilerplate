@@ -1,35 +1,32 @@
-# Purple Admin + Laravel
+# A Laravel Boilerplate using Purple Admin Theme
 
-A Laravel boilerplate with Purple Admin as the default theme.
+## Project Features
 
-## Included Packages
+1. Automated backups using [Laravel Backup](https://github.com/spatie/laravel-backup)
+1. User roles & permission management using [Laravel Permission](https://github.com/spatie/laravel-permission)
+1. Eloquent auditing using [Laravel Auditing](https://github.com/owen-it/laravel-auditing)
+1. Avatar management using [Gravatar](https://github.com/creativeorange/gravatar)
+1. Customizable error pages from [Laravel Collective](https://github.com/laravelcollective/errors)
+1. Server-side DataTables support using [Laravel Datatables](https://github.com/yajra/laravel-datatables)
 
-- [Laravel Backup](https://github.com/spatie/laravel-backup)
-- [Laravel Permission](https://github.com/spatie/laravel-permission)
-- [Laravel Auditing](https://github.com/owen-it/laravel-auditing)
-- [Gravatar](https://github.com/creativeorange/gravatar)
-- [Laravel Illustrated Errors](https://github.com/laravelcollective/errors)
-- [Laravel Datatables](https://github.com/yajra/laravel-datatables)
-- [Laravel Sentry](https://github.com/getsentry/sentry-laravel)
-- [Laravel Generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
-- [Laravel Test Factory Helper](https://github.com/mpociot/laravel-test-factory-helper)
+## Dev Features
+
+1. [Laravel Sentry](https://github.com/getsentry/sentry-laravel)
+1. [Laravel Generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
+1. [Laravel Test Factory Helper](https://github.com/mpociot/laravel-test-factory-helper)
 
 ## Installation
 
-1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project.
-1. Update the ```.env``` with your project settings.
-1. Setup Laravel [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues).
+1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project
+1. Update the ```.env``` with your project settings
+1. Setup [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues)
 1. Update ```SuperUserSeeder``` and ```UsersTableSeeder``` with your details.
 1. Migrate and seed the database.
 1. Serve your project, explore and build something awesome.
 
-## Wish List
-
-New/missing features to be worked on:
-
 ## Communication
 
-Send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com) if you discover a security vulnerability or you would to see some feature(s) added.
+If you have a question/query/suggestion, feel free to send me an e-mail via [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com).
 
 ## License
 
@@ -37,4 +34,4 @@ The project is open-sourced software licensed under the [MIT license](https://op
 
 ## TODO
 
-- Add a default image for gravatar (for offline browsing).
+New features/bug fixes are added here.

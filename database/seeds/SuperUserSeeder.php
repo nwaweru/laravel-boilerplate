@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 
-class AdministratorSeeder extends Seeder
+class SuperUserSeeder extends Seeder
 {
     use Utilities;
 
@@ -21,8 +21,8 @@ class AdministratorSeeder extends Seeder
     {
         Role::create([
             'uuid' => $this->generateUuid(),
-            'name' => 'administrator',
-            'display_name' => 'Administrator',
+            'name' => 'super-user',
+            'display_name' => 'Super User',
         ])->givePermissionTo(Permission::all());
 
         $user = User::create([
@@ -34,6 +34,6 @@ class AdministratorSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        $user->assignRole('administrator');
+        $user->assignRole('super-user');
     }
 }

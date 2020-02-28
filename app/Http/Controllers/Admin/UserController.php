@@ -67,7 +67,7 @@ class UserController extends Controller
                         $actions .= '<a href="' . route(
                             'admin.users.show',
                             ['user' => $user->uuid]
-                        ) . '" class="card-link"><i class="fas fa-info" title="View"></i></a>';
+                        ) . '" class="card-link"><i class="fas fa-info-circle" title="View"></i></a>';
                     }
 
                     return $actions;
@@ -170,7 +170,13 @@ class UserController extends Controller
      */
     public function show($uuid)
     {
-        //
+        $this->authorize('users.show');
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        return view('admin.users.show', [
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -231,7 +237,7 @@ class UserController extends Controller
             $roles = (is_null($request->roles)) ? [] : Role::whereIn('id', $request->roles)->pluck('name')->toArray();
             $user->syncRoles($roles);
 
-            return redirect()->back()->with([
+            return redirect()->route('admin.users.show', ['user' => $user->uuid])->with([
                 'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Changes Saved',
