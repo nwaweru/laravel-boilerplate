@@ -12,7 +12,7 @@
                     @if (session('resent'))
                         <div class="alert alert-success text-center">Instructions Resent to your Email</div>
                     @endif
-                    <div class="form-group mt-3">
+                    <div class="form-group mt-3 mb-0">
                         <button type="submit" class="btn btn-block btn-primary auth-form-btn">Resend Instructions</button>
                     </div>
                 </form>

@@ -4,9 +4,11 @@
 <div class="row justify-content-center">
     <div class="col-md-3 d-none d-md-block">
         <img src="{{ $user->gravatar }}" class="img-fluid rounded-circle w-100" alt="{{ $user->first_name . ' ' . $user->last_name }}">
-        <p class="p-1 mt-3 bg-white text-center border border-dark">
-            <small>Avatar managed using <a href="http://gravatar.com" class="card-link" target="_blank">Gravatar</a></small>
-        </p>
+        @if (!app()->environment('local'))
+            <p class="p-1 mt-3 bg-white text-center border border-dark">
+                <small>Avatar managed using <a href="http://gravatar.com" class="card-link" target="_blank">Gravatar</a></small>
+            </p>
+        @endif
     </div>
     <div class="col-md-5">
         <div class="card">

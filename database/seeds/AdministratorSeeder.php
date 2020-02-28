@@ -29,7 +29,7 @@ class AdministratorSeeder extends Seeder
             'uuid' => $this->generateUuid(),
             'first_name' => 'Ndirangu',
             'last_name' => 'Waweru',
-            'email' => 'nwaweru@drash.co.ke',
+            'email' => 'nwaweru@live.com',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password')
         ]);
