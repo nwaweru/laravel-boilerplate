@@ -1,22 +1,27 @@
-@extends('ui.layouts.basic', ['title' => $user->first_name . ' ' . $user->first_name])
+@extends('ui.layouts.basic', ['title' => 'Role ' . $role->name . ' - Permissions'])
 
 @section('content')
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="card-body">
-                <h3>{{ $user->first_name . ' ' . $user->last_name }}</h3>
+                <h3>Role {{ $role->name }}</h3>
+                <nav class="nav">
+                    <a class="nav-link text-dark" href="#">Permissions</a>
+                    <a class="nav-link" href="#">Users</a>
+                </nav>
+                <hr>
 
-                @include('admin.users.includes.profile')
-                
-                @canany(['users.delete', 'users.edit'])
+                @include('admin.roles.includes.view')
+
+                @canany(['roles.delete', 'roles.edit'])
                 <hr class="w-25">
                 <div class="clearfix">
-                    @if (Auth::user()->can('users.delete') && Auth::user()->id !== $user->id)
-                        <a href="{{ route('admin.users.delete', ['user' => $user->uuid]) }}" class="float-left btn btn-danger">Delete</a>
+                    @if (Auth::user()->can('roles.delete') && !in_array($role->name, $userRoles))
+                        <a href="{{ route('admin.roles.delete', ['role' => $role->uuid]) }}" class="float-left btn btn-danger">Delete</a>
                     @endif
-                    @can('users.edit')
-                        <a href="{{ route('admin.users.edit', ['user' => $user->uuid]) }}" class="float-right btn btn-primary">Edit</a>
+                    @can('roles.edit')
+                        <a href="{{ route('admin.roles.edit', ['role' => $role->uuid]) }}" class="float-right btn btn-primary">Edit</a>
                     @endcan
                 </div>
                 @endcanany

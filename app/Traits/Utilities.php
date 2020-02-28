@@ -18,4 +18,12 @@ trait Utilities
 
         return $uuid->toString();
     }
+
+    /**
+     * Get an array of the user roles.
+     */
+    public function getUserRoles($user)
+    {
+        return $user->roles()->pluck('name')->toArray();
+    }
 }

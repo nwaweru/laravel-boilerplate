@@ -45,7 +45,7 @@
                     <div class="border border-dark p-3">
                         @foreach ($roles as $role)
                             <div class="form-check">
-                                <label class="form-check-label text-muted">
+                                <label class="form-check-label">
                                     <input type="checkbox" id="role-{{ $role->uuid }}" name="roles[]"
                                         value="{{ $role->id }}" class="form-check-input"
                                         {{ (old('roles') && in_array($role->id, old('roles')) || in_array($role->id, $currentRoles) ? 'checked' : null) }}>

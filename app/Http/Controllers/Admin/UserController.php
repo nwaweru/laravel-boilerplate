@@ -302,24 +302,24 @@ class UserController extends Controller
             ]);
         }
 
-        try {
-            $user->delete();
+        // try {
+        $user->delete();
 
-            return redirect()->route('admin.users.index')->with([
-                'alert' => (object) [
-                    'type' => 'success',
-                    'text' => 'User Deleted',
-                ],
-            ]);
-        } catch (Exception $ex) {
-            Log::error($ex);
+        return redirect()->route('admin.users.index')->with([
+            'alert' => (object) [
+                'type' => 'success',
+                'text' => 'User Deleted',
+            ],
+        ]);
+        // } catch (Exception $ex) {
+        //     Log::error($ex);
 
-            return redirect()->back()->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Database Error Occurred',
-                ],
-            ]);
-        }
+        //     return redirect()->back()->with([
+        //         'alert' => (object) [
+        //             'type' => 'danger',
+        //             'text' => 'Database Error Occurred',
+        //         ],
+        //     ]);
+        // }
     }
 }

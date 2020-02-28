@@ -33,13 +33,17 @@ class RoleController extends Controller
             $roles = Role::query();
 
             return DataTables::of($roles)
-                ->addColumn('roles', function (role $role) {
-                    return implode(', ', $role->pluck('name')->toArray());
+                ->addColumn('name', function (role $role) {
+                    if (Auth::user()->can('roles.show')) {
+                        return '<a class="card-link" href="' . route('admin.roles.show', ['role' => $role->uuid]) . '">' . $role->name . '</a>';
+                    }
+
+                    return $role->name;
                 })
                 ->addColumn('actions', function (role $role) {
                     $actions = '';
 
-                    if (Auth::user()->can('roles.delete') && $role->name !== 'super-user') {
+                    if (Auth::user()->can('roles.delete') && !in_array($role->name, $this->getUserRoles(Auth::user()))) {
                         $actions .= '<a class="card-link" href="' . route('admin.roles.delete', ['role' => $role->uuid]) . '"><i title="Delete" class="text-danger fas fa-fw fa-trash-alt"></i></a>';
                     }
 
@@ -47,12 +51,10 @@ class RoleController extends Controller
                         $actions .= '<a class="card-link" href="' . route('admin.roles.edit', ['role' => $role->uuid]) . '"><i title="Edit" class="fas fa-fw fa-edit"></i></a>';
                     }
 
-                    if (Auth::user()->can('roles.show')) {
-                        $actions .= '<a class="card-link" href="' . route('admin.roles.show', ['role' => $role->uuid]) . '"><i title="View" class="fas fa-fw fa-info-circle"></i></a>';
-                    }
 
                     return $actions;
                 })
+                ->rawColumns(['name', 'actions'])
                 ->toJson();
         }
 
@@ -86,7 +88,7 @@ class RoleController extends Controller
         $this->authorize('roles.create');
 
         $request->validate([
-            'name' => ['required', 'unique:roles,name'],
+            'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
             'permissions' => ['required', 'exists:permissions,id'],
         ]);
 
@@ -124,14 +126,17 @@ class RoleController extends Controller
      */
     public function show($uuid)
     {
-        if (Auth::role()->uuid !== $uuid) {
-            $this->authorize('roles.read');
-        }
+        $this->authorize('roles.show');
 
-        $role = role::where('uuid', $uuid)->firstOrFail();
+        $role = Role::where('uuid', $uuid)->firstOrFail();
+        $permissionGroups = PermissionGroup::orderBy('name', 'asc')->get();
+        $currentPermissions = $role->permissions()->pluck('id')->toArray();
 
-        return view('roles.show', [
+        return view('admin.roles.show', [
             'role' => $role,
+            'permissionGroups' => $permissionGroups,
+            'currentPermissions' => $currentPermissions,
+            'userRoles' => $this->getUserRoles(Auth::user()),
         ]);
     }
 
@@ -143,18 +148,16 @@ class RoleController extends Controller
      */
     public function edit($uuid)
     {
-        if (Auth::role()->uuid !== $uuid) {
-            $this->authorize('roles.update');
-        }
+        $this->authorize('roles.edit');
 
-        $role = role::where('uuid', $uuid)->firstOrFail();
-        $roles = Role::all();
-        $currentRoles = $role->roles()->pluck('id')->toArray();
+        $role = Role::where('uuid', $uuid)->firstOrFail();
+        $permissionGroups = PermissionGroup::orderBy('name', 'asc')->get();
+        $currentPermissions = $role->permissions()->pluck('id')->toArray();
 
-        return view('roles.edit', [
+        return view('admin.roles.edit', [
             'role' => $role,
-            'roles' => $roles,
-            'currentRoles' => $currentRoles,
+            'permissionGroups' => $permissionGroups,
+            'currentPermissions' => $currentPermissions,
         ]);
     }
 
@@ -167,32 +170,23 @@ class RoleController extends Controller
      */
     public function update(Request $request, $uuid)
     {
-        if (Auth::role()->uuid !== $uuid) {
-            $this->authorize('roles.update');
-        }
+        $this->authorize('roles.edit');
 
         $role = role::where('uuid', $uuid)->firstOrFail();
 
         $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', Rule::unique('roles')->ignore($role)],
-            'roles' => ['sometimes', 'required', 'exists:roles,id'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('roles')->ignore($role->id)],
+            'permissions' => ['required', 'exists:permissions,id'],
         ]);
 
         try {
             $role->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => (!is_null($request->email)) ? $request->email : $role->email,
+                'name' => $request->name,
             ]);
 
-            if (!is_null($request->roles)) {
-                $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
-                $role->syncRoles($roles);
-            }
+            $role->syncPermissions(Permission::whereIn('id', $request->permissions)->pluck('name'));
 
-            return redirect()->route('roles.show', ['role' => $role->uuid])->with([
+            return redirect()->route('admin.roles.show', ['role' => $role->uuid])->with([
                 'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Changes Saved',
@@ -204,7 +198,7 @@ class RoleController extends Controller
             return redirect()->back()->withInput()->with([
                 'alert' => (object) [
                     'type' => 'danger',
-                    'text' => 'Internal Error Occurred',
+                    'text' => 'Database Error Occurred',
                 ],
             ]);
         }
@@ -220,10 +214,25 @@ class RoleController extends Controller
     {
         $this->authorize('roles.delete');
 
-        $role = role::where('uuid', $uuid)->firstOrFail();
+        $role = Role::where('uuid', $uuid)->firstOrFail();
 
-        return view('roles.delete', [
+        if (in_array($role->name, $this->getUserRoles(Auth::user()))) {
+            return redirect()->route('admin.roles.index')->with([
+                'alert' => (object) [
+                    'type' => 'danger',
+                    'text' => 'Permission Denied',
+                ],
+            ]);
+        }
+
+        $permissionGroups = PermissionGroup::orderBy('name', 'asc')->get();
+        $currentPermissions = $role->permissions()->pluck('id')->toArray();
+
+        return view('admin.roles.delete', [
             'role' => $role,
+            'permissionGroups' => $permissionGroups,
+            'currentPermissions' => $currentPermissions,
+            'userRoles' => $this->getUserRoles(Auth::user()),
         ]);
     }
 
@@ -237,24 +246,33 @@ class RoleController extends Controller
     {
         $this->authorize('roles.delete');
 
-        $role = role::where('uuid', $uuid)->firstOrFail();
+        $role = Role::where('uuid', $uuid)->firstOrFail();
+
+        if (in_array($role->name, $this->getUserRoles(Auth::user()))) {
+            return redirect()->route('admin.roles.index')->with([
+                'alert' => (object) [
+                    'type' => 'danger',
+                    'text' => 'Permission Denied',
+                ],
+            ]);
+        }
 
         try {
             $role->delete();
 
-            return redirect()->route('roles.index')->with([
+            return redirect()->route('admin.roles.index')->with([
                 'alert' => (object) [
                     'type' => 'success',
-                    'text' => 'role Deleted',
+                    'text' => 'Role Deleted',
                 ],
             ]);
         } catch (Exception $ex) {
             Log::error($ex);
 
-            return redirect()->back()->withInput()->with([
+            return redirect()->back()->with([
                 'alert' => (object) [
                     'type' => 'danger',
-                    'text' => 'Internal Error Occurred',
+                    'text' => 'Database Error Occurred',
                 ],
             ]);
         }

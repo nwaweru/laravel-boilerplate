@@ -46,7 +46,7 @@
                                     <div class="collapse show" id="permission-group-{{ $group->uuid }}">
                                         @foreach ($group->permissions as $permission)
                                             <div class="form-check mx-3">
-                                                <label class="form-check-label text-muted">
+                                                <label class="form-check-label">
                                                     <input type="checkbox" id="permission-{{ $permission->uuid }}" name="permissions[]"
                                                         value="{{ $permission->id }}" class="form-check-input"
                                                         {{ (old('permissions') && in_array($permission->id, old('permissions'))) ? 'checked' : null }}>

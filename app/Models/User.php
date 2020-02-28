@@ -10,10 +10,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\Auth\ResetPassword as ResetPasswordNotification;
 use App\Notifications\Auth\Verification as EmailVerificationNotification;
+use App\Traits\Utilities;
 
 class User extends Authenticatable implements Auditable, MustVerifyEmail
 {
-    use HasRoles, Notifiable, \OwenIt\Auditing\Auditable;
+    use HasRoles, Notifiable, \OwenIt\Auditing\Auditable, Utilities;
 
     /**
      * The attributes that are mass assignable.
@@ -93,6 +94,8 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
      */
     public function getRoleAttribute()
     {
-        return implode(', ', $this->roles()->pluck('name')->toArray());
+        $user = $this;
+
+        return implode(', ', $this->getUserRoles($user));
     }
 }
