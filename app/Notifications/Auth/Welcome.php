@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class Welcome extends Notification
+class Welcome extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -40,7 +40,11 @@ class Welcome extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->markdown('emails.auth.welcome');
+        return (new MailMessage)->subject('Account Created')
+            ->markdown('emails.auth.welcome', [
+                'user' => $notifiable,
+                'token' => $notifiable->welcomeToken->token,
+            ]);
     }
 
     /**

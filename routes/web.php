@@ -11,15 +11,19 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index')->name('welcome')->middleware('auth');
+Route::match(['get', 'put'], '/users/welcome/{token}', 'Auth\WelcomeController@setPassword')->name('users.welcome');
 
 Auth::routes([
     'verify' => true,
 ]);
 
-Route::name('profile.')->middleware(['auth'])->group(function () {
-    Route::get('/profile/{user}/edit', 'ProfileController@edit')->name('edit');
-    Route::put('/profile/{user}', 'ProfileController@update')->name('update');
+Route::middleware('auth')->group(function () {
+    Route::get('/', 'WelcomeController@index')->name('welcome');
+
+    Route::name('profile.')->group(function () {
+        Route::get('/profile/{user}/edit', 'ProfileController@edit')->name('edit');
+        Route::put('/profile/{user}', 'ProfileController@update')->name('update');
+    });
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

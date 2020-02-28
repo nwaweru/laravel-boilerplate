@@ -10,12 +10,14 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\WelcomeToken;
 use App\Traits\Utilities;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
+use App\Notifications\Auth\Welcome as WelcomeNotification;
 
 class UserController extends Controller
 {
@@ -124,6 +126,24 @@ class UserController extends Controller
                 $user->assignRole($roles);
             }
 
+            WelcomeToken::create([
+                'user_id' => $user->id,
+                'token' => $this->generateUuid(),
+            ]);
+        } catch (Exception $ex) {
+            Log::error($ex);
+
+            return redirect()->back()->withInput()->with([
+                'alert' => (object) [
+                    'type' => 'danger',
+                    'text' => 'Database Error Occurred',
+                ],
+            ]);
+        }
+
+        try {
+            $user->notify(new WelcomeNotification());
+
             return redirect()->route('admin.users.index')->with([
                 'alert' => (object) [
                     'type' => 'success',
@@ -136,7 +156,7 @@ class UserController extends Controller
             return redirect()->back()->withInput()->with([
                 'alert' => (object) [
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Notification Error Occurred',
                 ],
             ]);
         }

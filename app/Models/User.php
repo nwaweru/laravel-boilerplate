@@ -43,6 +43,14 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     ];
 
     /**
+     * Get the welcome token for new users.
+     */
+    public function welcomeToken()
+    {
+        return $this->hasOne(WelcomeToken::class);
+    }
+
+    /**
      * Send the email verification notification.
      *
      * @param string $token

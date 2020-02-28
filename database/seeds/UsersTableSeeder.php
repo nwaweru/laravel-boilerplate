@@ -26,9 +26,5 @@ class UsersTableSeeder extends Seeder
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password')
         ]);
-
-        if (app()->environment('local')) {
-            factory(User::class, 50)->create();
-        }
     }
 }
