@@ -7,7 +7,7 @@
                 <div class="card-body">
                     <div class="clearfix">
                         <h1 class="float-left">Users</h1>
-                        <a href="{{ route('users.create') }}" class="float-right btn btn-primary btn-sm">
+                        <a href="{{ route('admin.users.create') }}" class="float-right btn btn-primary btn-sm">
                             <i class="fas fa-fw fa-plus"></i> User
                         </a>
                     </div>
@@ -35,7 +35,7 @@
                 paging: false,
                 scrollY: '40vh',
                 scrollCollapse: true,
-                ajax: '{{ route('users.index') }}',
+                ajax: '{{ route('admin.users.index') }}',
                 columns: [
                     {data: 'first_name', name: 'first_name'},
                     {data: 'last_name', name: 'last_name'},

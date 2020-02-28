@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', 'WelcomeController@index')->name('welcome');
+Route::get('/', 'WelcomeController@index')->name('welcome')->middleware('auth');
 
 Auth::routes([
     'verify' => true,

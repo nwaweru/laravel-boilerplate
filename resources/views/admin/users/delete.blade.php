@@ -22,7 +22,7 @@
                         </tr>
                     </table>
                 </div>
-                <form class="pt-3" method="POST" action="{{ route('users.destroy', ['user' => $user->uuid]) }}" novalidate>
+                <form class="pt-3" method="POST" action="{{ route('admin.users.destroy', ['user' => $user->uuid]) }}" novalidate>
                     @method('DELETE')
                     @csrf
                     <div class="form-group mt-3">

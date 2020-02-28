@@ -22,7 +22,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#setup" aria-expanded="false" aria-controls="setup">
                     <span class="menu-title">Admin</span>
-                    <i class="fas fa-wrench menu-icon"></i>
+                    <i class="fas fa-tools menu-icon"></i>
                 </a>
                 <div class="collapse" id="setup">
                     <ul class="nav flex-column sub-menu">

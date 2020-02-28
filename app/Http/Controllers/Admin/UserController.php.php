@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Setup;
 
-use App\Models\User;
-use Exception;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\View\View;
-use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\WelcomeToken;
+use App\Notifications\Auth\Welcome as WelcomeNotification;
 use App\Traits\Utilities;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -24,8 +26,8 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
-     * @throws Exception
+     * @return View
+     * @throws AuthorizationException
      */
     public function index()
     {
@@ -35,52 +37,41 @@ class UserController extends Controller
             $users = User::query();
 
             return DataTables::of($users)
-                ->addColumn('email', function ($user) {
-                    $email = '<a href="mailto:' . $user->email . '" class="card-link" title="Send E-mail" target="_blank">' . $user->email . '</a>';
-
-                    if ($user->role !== '') {
-                        $email .= ' <small class="text-muted">(' . $user->role . ')</small>';
-                    }
-
-                    return $email;
+                ->addColumn('roles', function (User $user) {
+                    return implode(', ', $user->roles()->pluck('display_name')->toArray());
                 })
-                ->addColumn('actions', function ($user) {
+                ->addColumn('actions', function (User $user) {
                     $actions = '';
 
-                    if (auth()->user()->can('users.delete') && Auth::user()->id !== $user->id) {
-                        $actions .= '<a href="' . route(
-                            'admin.users.delete',
-                            ['user' => $user->uuid]
-                        ) . '" class="card-link text-danger"><i class="fas fa-trash" title="Delete"></i></a>';
+                    if (auth()->user()->can('users.show')) {
+                        $actions .= '<a class="card-link" href="' . route('users.show', ['user' => $user->uuid]) . '"><i title="View" class="fas fa-fw fa-info-circle"></i></a>';
                     }
 
                     if (auth()->user()->can('users.edit')) {
-                        $actions .= '<a href="' . route(
-                            'admin.users.edit',
-                            ['user' => $user->uuid]
-                        ) . '" class="card-link"><i class="fas fa-edit" title="Edit"></i></a>';
+                        $actions .= '<a class="card-link" href="' . route('users.edit', ['user' => $user->uuid]) . '"><i title="Edit" class="fas fa-fw fa-edit"></i></a>';
                     }
 
-                    if (auth()->user()->can('users.show')) {
-                        $actions .= '<a href="' . route(
-                            'admin.users.show',
-                            ['user' => $user->uuid]
-                        ) . '" class="card-link"><i class="fas fa-info" title="View"></i></a>';
+                    if (auth()->user()->can('users.delete')) {
+                        $actions .= '<a class="card-link text-danger" href="' . route('users.delete', ['user' => $user->uuid]) . '"><i title="Delete" class="fas fa-fw fa-trash-alt"></i></a>';
                     }
 
                     return $actions;
                 })
-                ->rawColumns(['email', 'actions'])
-                ->toJson(true);
+                ->order(function ($query) {
+                    $query->orderBy('first_name', 'asc');
+                })
+                ->rawColumns(['log', 'actions'])
+                ->toJson();
         }
 
-        return view('admin.users.index');
+        return view('setup.users.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
+     * @throws AuthorizationException
      */
     public function create()
     {
@@ -88,7 +79,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return view('admin.users.create', [
+        return view('setup.users.create', [
             'roles' => $roles,
         ]);
     }
@@ -96,8 +87,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
-     * @return Response
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(Request $request)
     {
@@ -107,7 +99,7 @@ class UserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'roles' => ['nullable', 'exists:roles,id'],
+            'roles' => ['required', 'exists:roles,id'],
         ]);
 
         try {
@@ -116,16 +108,33 @@ class UserController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'password' => Hash::make($this->generateUuid()),
+                'email_verified_at' => Carbon::now(),
+                'password' => Hash::make('s3cr3t'),
             ]);
 
-            if (!is_null($request->roles)) {
-                $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
-                $user->assignRole($roles);
-            }
+            $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+            $user->assignRole($roles);
+        } catch (Exception $ex) {
+            Log::error($ex);
 
-            return redirect()->route('admin.users.index')->with([
-                'alert' => (object) [
+            return redirect()->back()->withInput()->with([
+                'alert' => (object)[
+                    'type' => 'danger',
+                    'text' => 'Internal Error Occurred',
+                ],
+            ]);
+        }
+
+        try {
+            $token = WelcomeToken::create([
+                'user_id' => $user->id,
+                'token' => $this->generateUuid(),
+            ]);
+
+            $user->notify(new WelcomeNotification($user, $token->token));
+
+            return redirect()->route('users.show', ['user' => $user->uuid])->with([
+                'alert' => (object)[
                     'type' => 'success',
                     'text' => 'User Created',
                 ],
@@ -134,9 +143,9 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Notification Error Occurred',
                 ],
             ]);
         }
@@ -146,28 +155,40 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param uuid $uuid
-     * @return Response
+     * @return View
+     * @throws AuthorizationException
      */
     public function show($uuid)
     {
-        //
+        if (auth()->user()->uuid !== $uuid) {
+            $this->authorize('users.show');
+        }
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
+        return view('setup.users.show', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param uuid $uuid
-     * @return Response
+     * @return View
+     * @throws AuthorizationException
      */
     public function edit($uuid)
     {
-        $this->authorize('users.edit');
+        if (auth()->user()->uuid !== $uuid) {
+            $this->authorize('users.edit');
+        }
 
         $user = User::where('uuid', $uuid)->firstOrFail();
         $roles = Role::all();
         $currentRoles = $user->roles()->pluck('id')->toArray();
 
-        return view('admin.users.edit', [
+        return view('setup.users.edit', [
             'user' => $user,
             'roles' => $roles,
             'currentRoles' => $currentRoles,
@@ -177,21 +198,24 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @param uuid $uuid
-     * @return Response
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
     {
-        $this->authorize('users.edit');
+        if (auth()->user()->uuid !== $uuid) {
+            $this->authorize('users.edit');
+        }
 
         $user = User::where('uuid', $uuid)->firstOrFail();
 
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'roles' => ['nullable', 'exists:roles,id'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user)],
+            'roles' => ['sometimes', 'required', 'exists:roles,id'],
         ]);
 
         try {
@@ -208,11 +232,13 @@ class UserController extends Controller
                 $user->sendEmailVerificationNotification();
             }
 
-            $roles = (is_null($request->roles)) ? [] : Role::whereIn('id', $request->roles)->pluck('name')->toArray();
-            $user->syncRoles($roles);
+            if (!is_null($request->roles)) {
+                $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+                $user->syncRoles($roles);
+            }
 
-            return redirect()->back()->with([
-                'alert' => (object) [
+            return redirect()->route('users.show', ['user' => $user->uuid])->with([
+                'alert' => (object)[
                     'type' => 'success',
                     'text' => 'Changes Saved',
                 ],
@@ -221,19 +247,20 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Internal Error Occurred',
                 ],
             ]);
         }
     }
 
     /**
-     * Show the view for deleting the specified resource.
+     * Display the specified resource selected for deletion.
      *
      * @param uuid $uuid
-     * @return Response
+     * @return View
+     * @throws AuthorizationException
      */
     public function delete($uuid)
     {
@@ -241,16 +268,7 @@ class UserController extends Controller
 
         $user = User::where('uuid', $uuid)->firstOrFail();
 
-        if (Auth::user()->uuid === $user->uuid) {
-            return redirect()->route('admin.users.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Permission Denied',
-                ],
-            ]);
-        }
-
-        return view('admin.users.delete', [
+        return view('setup.users.delete', [
             'user' => $user,
         ]);
     }
@@ -259,7 +277,8 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param uuid $uuid
-     * @return Response
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy($uuid)
     {
@@ -267,20 +286,11 @@ class UserController extends Controller
 
         $user = User::where('uuid', $uuid)->firstOrFail();
 
-        if (Auth::user()->uuid === $user->uuid) {
-            return redirect()->route('admin.users.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Permission Denied',
-                ],
-            ]);
-        }
-
         try {
             $user->delete();
 
-            return redirect()->route('admin.users.index')->with([
-                'alert' => (object) [
+            return redirect()->route('users.index')->with([
+                'alert' => (object)[
                     'type' => 'success',
                     'text' => 'User Deleted',
                 ],
@@ -288,10 +298,10 @@ class UserController extends Controller
         } catch (Exception $ex) {
             Log::error($ex);
 
-            return redirect()->back()->with([
-                'alert' => (object) [
+            return redirect()->back()->withInput()->with([
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Internal Error Occurred',
                 ],
             ]);
         }

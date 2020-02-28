@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-body">
                 <h3>Edit User</h3>
-                <form class="pt-3" method="POST" action="{{ route('users.update', ['user' => $user->uuid]) }}" novalidate>
+                <form class="pt-3" method="POST" action="{{ route('admin.users.update', ['user' => $user->uuid]) }}" novalidate>
                     @method('PUT')
                     @csrf
                     <div class="form-group">
@@ -41,6 +41,18 @@
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
+                    </div>
+                    <div class="border border-dark p-3">
+                        @foreach ($roles as $role)
+                            <div class="form-check">
+                                <label class="form-check-label text-muted">
+                                    <input type="checkbox" id="role-{{ $role->uuid }}" name="roles[]"
+                                        value="{{ $role->id }}" class="form-check-input"
+                                        {{ (old('roles') && in_array($role->id, old('roles')) || in_array($role->id, $currentRoles) ? 'checked' : null) }}>
+                                    {{ $role->display_name }}
+                                </label>
+                            </div>
+                        @endforeach
                     </div>
                     <div class="form-group mt-3">
                         <button type="submit"

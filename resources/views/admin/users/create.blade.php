@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-body">
                 <h3>Create User</h3>
-                <form class="pt-3" method="POST" action="{{ route('users.store') }}" novalidate>
+                <form class="pt-3" method="POST" action="{{ route('admin.users.store') }}" novalidate>
                     @csrf
                     <div class="form-group">
                         <label for="first_name" class="sr-only">First Name</label>
@@ -46,7 +46,7 @@
                             <div class="form-check">
                                 <label class="form-check-label text-muted">
                                     <input type="checkbox" id="role-{{ $role->uuid }}" name="roles[]"
-                                        class="form-check-input"
+                                        value="{{ $role->id }}" class="form-check-input"
                                         {{ (old('roles') && in_array($role->id, old('roles'))) ? 'checked' : null }}> {{ $role->display_name }}
                                 </label>
                             </div>
