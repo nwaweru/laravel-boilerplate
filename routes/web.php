@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::namespace('Admin')->name('admin.')->prefix('admin/')->group(function () {
+    Route::namespace('Admin')->name('admin.')->prefix('setup/')->group(function () {
         Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
         Route::resource('users', 'UserController');
 

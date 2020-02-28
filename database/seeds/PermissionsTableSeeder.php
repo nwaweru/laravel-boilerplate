@@ -145,7 +145,7 @@ class PermissionsTableSeeder extends Seeder
             [
                 'permission_group_id' => $permissionGroup['audit']->id,
                 'name' => 'auditing.index',
-                'display_name' => 'Laravel Auditing',
+                'display_name' => 'Auditing',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

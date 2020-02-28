@@ -21,8 +21,7 @@ class SuperUserSeeder extends Seeder
     {
         Role::create([
             'uuid' => $this->generateUuid(),
-            'name' => 'super-user',
-            'display_name' => 'Super User',
+            'name' => 'Super User',
         ])->givePermissionTo(Permission::all());
 
         $user = User::create([
@@ -34,6 +33,6 @@ class SuperUserSeeder extends Seeder
             'password' => Hash::make('password')
         ]);
 
-        $user->assignRole('super-user');
+        $user->assignRole('Super User');
     }
 }
