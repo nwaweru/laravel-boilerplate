@@ -1,34 +1,23 @@
-@extends('ui.layouts.auth', ['title' => 'Verify Email'])
+@extends('ui.layouts.app', ['title' => 'Verify Email'])
 
 @section('content')
-    <div class="row flex-grow">
-        <div class="col-lg-4 mx-auto">
-            <div class="auth-form-light text-left p-5">
-                <div class="brand-logo">
-                    <img src="{{ asset('img/purple-admin/logo.svg') }}" alt="{{ config('app.name') }}">
-                </div>
-                @if (session('resent'))
-                    <hr class="w-25">
-                    <p class="text-success text-center">A fresh verification link has been sent
-                        to {{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}.</p>
-                    <hr class="w-25">
-                @endif
-                <div class="mt-2">
-                    <p>Hello <b>{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}</b>. You are almost ready
-                        to access
-                        <b>{{ config('app.name') }}</b>.</p>
-                    <p>{{ __('Before proceeding, please check your email for a verification link.') }}</p>
-                </div>
-                <form class="pt-2" method="POST" action="{{ route('verification.resend') }}">
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-body">
+                <p>Hi {{ Auth::user()->last_name }},</p>
+                <p class="pb-3">Check your email for instructions on how to verify and access your account.</p>
+                <form method="POST" action="{{ route('verification.resend') }}">
                     @csrf
-                    <div class="mt-3">
-                        <button type="submit"
-                                class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">
-                            {{ __('Request New Link') }}
-                        </button>
+                    @if (session('resent'))
+                        <div class="alert alert-success text-center">Instructions Resent to your Email</div>
+                    @endif
+                    <div class="form-group mt-3 mb-0">
+                        <button type="submit" class="btn btn-block btn-primary auth-form-btn">Resend Instructions</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+</div>
 @endsection

@@ -1,39 +1,33 @@
-# Purple Admin + Laravel
+# A Laravel Boilerplate using Purple Admin Theme
 
-A Laravel boilerplate with Purple Admin as the default theme.
+## Project Features
 
-## Purple Admin
+1. Automated backups using [Laravel Backup](https://github.com/spatie/laravel-backup)
+1. User roles & permission management using [Laravel Permission](https://github.com/spatie/laravel-permission)
+1. Eloquent auditing using [Laravel Auditing](https://github.com/owen-it/laravel-auditing)
+1. Avatar management using [Gravatar](https://github.com/creativeorange/gravatar)
+1. Customizable error pages from [Laravel Collective](https://github.com/laravelcollective/errors)
+1. Server-side DataTables support using [Laravel Datatables](https://github.com/yajra/laravel-datatables)
 
-> Purple admin template features a strikingly beautiful design that can instantly captivate user attention. Keeping up with the latest design trends, Purple Admin has a vibrant design along splendid gradient colors. All the components and the data visualization techniques in the template have a polished design that makes it suitable for the simplified presentation of complex data.
+## Dev Features
 
-You can preview the template from Bootstrap Dash [on their website](https://www.bootstrapdash.com/product/purple-free-admin-template) or view [the actual code](https://github.com/BootstrapDash/PurpleAdmin-Free-Admin-Template).
+1. [Laravel Sentry](https://github.com/getsentry/sentry-laravel)
+1. [Laravel Generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
+1. [Laravel Test Factory Helper](https://github.com/mpociot/laravel-test-factory-helper)
 
-## Laravel
+## Installation
 
-> Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects
+1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project
+1. Update the ```.env``` with your project settings
+1. Setup [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues)
+1. Update ```SuperUserSeeder``` and ```UsersTableSeeder``` with your details.
+1. Migrate and seed the database.
+1. Serve your project, explore and build something awesome.
 
-You can read more about Laravel from [their website](http://laravel.com).
+## Communication
 
-## Packages in the Project
-
-1. [laravel-backup](https://github.com/spatie/laravel-backup)
-1. [laravel-permission](https://github.com/spatie/laravel-permission)
-1. [laravel-auditing](https://github.com/owen-it/laravel-auditing)
-1. [gravatar](https://github.com/creativeorange/gravatar)
-1. [illustrated-errors](https://github.com/laravelcollective/errors)
-1. [laravel-datatables](https://github.com/yajra/laravel-datatables)
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within the project, please send an e-mail to Ndirangu Waweru [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com). All security vulnerabilities will be promptly addressed.
+If you have a question/query/suggestion, feel free to send me an e-mail via [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com).
 
 ## License
 
 The project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## Wish List
-
-Some other cool packages that might be added/needed:
-
-1. [laravel-generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
-1. [laravel-test-factory-helper](https://github.com/mpociot/laravel-test-factory-helper)

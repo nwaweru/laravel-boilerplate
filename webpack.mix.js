@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-// Create public/css/app.css
+// Create public/css/style.css
 mix.sass('resources/sass/app.scss', 'public/css');
 mix.styles([
     'public/css/app.css',
@@ -21,8 +21,8 @@ mix.styles([
     'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.css'
 ], 'public/css/style.css');
 
-// Create public/css/illustrated-errors.css
-mix.copy('resources/css/illustrated-errors.css', 'public/css/illustrated-errors.css');
+// Copy raw CSS to public/css directory.
+mix.copyDirectory('resources/css', 'public/css');
 
 // Copy purple-admin fonts to public/fonts directory.
 mix.copyDirectory('resources/themes/purple-admin/fonts', 'public/fonts');
@@ -31,7 +31,7 @@ mix.copyDirectory('resources/themes/purple-admin/fonts', 'public/fonts');
 mix.copyDirectory('resources/img', 'public/img');
 mix.copyDirectory('resources/themes/purple-admin/images', 'public/img/purple-admin');
 
-// Create public/js/app.js
+// Create public/js/script.js
 mix.js('resources/js/app.js', 'public/js');
 mix.scripts([
     'public/js/app.js',

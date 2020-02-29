@@ -3,8 +3,9 @@
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -19,86 +20,199 @@ class PermissionsTableSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $group = PermissionGroup::where('name', 'Pages')->first();
-        $pages = [
-            [
-                'group_id' => $group->id,
-                'name' => 'home',
-                'display_name' => 'Dashboard',
-            ],
+        $permissionGroup = [
+            'users' => PermissionGroup::where('name', 'Users')->first(),
+            'roles' => PermissionGroup::where('name', 'Roles')->first(),
+            'permissionGroups' => PermissionGroup::where('name', 'Permission Groups')->first(),
+            'permissions' => PermissionGroup::where('name', 'Permissions')->first(),
+            'audit' => PermissionGroup::where('name', 'Audit')->first(),
         ];
 
-        $group = PermissionGroup::where('name', 'Users')->first();
         $users = [
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['users']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'users.index',
-                'display_name' => 'Browse',
+                'display_name' => 'Browse Users',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['users']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'users.create',
-                'display_name' => 'Create',
+                'display_name' => 'Create User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['users']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'users.show',
-                'display_name' => 'Read',
+                'display_name' => 'View User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['users']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'users.edit',
-                'display_name' => 'Update',
+                'display_name' => 'Update User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['users']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'users.delete',
-                'display_name' => 'Delete',
+                'display_name' => 'Delete User',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
-        $group = PermissionGroup::where('name', 'Users')->first();
         $roles = [
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'roles.index',
-                'display_name' => 'Browse',
+                'display_name' => 'Browse Roles',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'roles.create',
-                'display_name' => 'Create',
+                'display_name' => 'Create Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'roles.show',
-                'display_name' => 'Read',
+                'display_name' => 'View Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'roles.edit',
-                'display_name' => 'Update',
+                'display_name' => 'Update Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['roles']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'roles.delete',
-                'display_name' => 'Delete',
+                'display_name' => 'Delete Role',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
-        $group = PermissionGroup::where('name', 'Audit')->first();
+        $permissionGroups = [
+            [
+                'permission_group_id' => $permissionGroup['permissionGroups']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissionGroups.index',
+                'display_name' => 'Browse Permission Groups',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissionGroups']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissionGroups.create',
+                'display_name' => 'Create Permission Group',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissionGroups']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissionGroups.show',
+                'display_name' => 'View Permission Group',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissionGroups']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissionGroups.edit',
+                'display_name' => 'Update Permission Group',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissionGroups']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissionGroups.delete',
+                'display_name' => 'Delete Permission Group',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ];
+
+        $permissions = [
+            [
+                'permission_group_id' => $permissionGroup['permissions']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissions.index',
+                'display_name' => 'Browse Permissions',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissions']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissions.create',
+                'display_name' => 'Create Permission',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissions']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissions.show',
+                'display_name' => 'View Permission',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissions']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissions.edit',
+                'display_name' => 'Update Permission',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'permission_group_id' => $permissionGroup['permissions']->id,
+                'uuid' => $this->generateUuid(),
+                'name' => 'permissions.delete',
+                'display_name' => 'Delete Permission',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ];
+
         $audit = [
             [
-                'group_id' => $group->id,
+                'permission_group_id' => $permissionGroup['audit']->id,
+                'uuid' => $this->generateUuid(),
                 'name' => 'auditing.index',
                 'display_name' => 'Laravel Auditing',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
         ];
 
-        $permissions = array_merge($pages, $users, $roles, $audit);
+        $mergedPermissions = array_merge($users, $roles, $permissionGroups, $permissions, $audit);
 
-        foreach ($permissions as $permission) {
-            Permission::create($permission);
-        }
+        DB::table('permissions')->insert($mergedPermissions);
     }
 }

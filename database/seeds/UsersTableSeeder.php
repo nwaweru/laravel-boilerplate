@@ -1,8 +1,8 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Traits\Utilities;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,15 +17,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
+        User::create([
             'uuid' => $this->generateUuid(),
-            'first_name' => 'Jane',
-            'last_name' => 'Doe',
-            'email' => 'jane.doe@example.com',
+            'first_name' => 'Ndirangu',
+            'last_name' => 'Waweru',
+            'email' => 'ndiranguwaweru@gmail.com',
             'email_verified_at' => Carbon::now(),
             'password' => Hash::make('password')
         ]);
-
-        $user->assignRole('administrator');
     }
 }

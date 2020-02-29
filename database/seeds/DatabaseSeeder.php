@@ -14,13 +14,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionGroupsTableSeeder::class,
             PermissionsTableSeeder::class,
-            RolesTableSeeder::class,
         ]);
 
-        $this->call(UsersTableSeeder::class);
-
-        if (app()->environment('local')) {
-            $this->call(DummyDataSeeder::class);
-        }
+        $this->call([
+            SuperUserSeeder::class,
+            UsersTableSeeder::class,
+        ]);
     }
 }
