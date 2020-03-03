@@ -12,11 +12,13 @@
         "creativeorange/gravatar": "^1.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.2",
+        "laravel/slack-notification-channel": "^2.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
         "laravelcollective/errors": "^1.0",
         "owen-it/laravel-auditing": "^9.3",
         "sentry/sentry-laravel": "^1.7",
+        "spatie/flysystem-dropbox": "^1.2",
         "spatie/laravel-backup": "^6.7",
         "spatie/laravel-permission": "^3.8",
         "yajra/laravel-datatables": "^1.5"

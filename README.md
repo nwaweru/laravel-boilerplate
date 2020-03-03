@@ -1,4 +1,4 @@
-# A Laravel Boilerplate using Purple Admin Theme
+# Laravel Boilerplate
 
 ## Project Features
 
@@ -20,7 +20,7 @@
 1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project
 1. Update the ```.env``` with your project settings
 1. Setup [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues)
-1. Update ```SuperUserSeeder``` and ```UsersTableSeeder``` with your details.
+1. Update ```UsersTableSeeder``` with your details.
 1. Migrate and seed the database.
 1. Serve your project, explore and build something awesome.
 

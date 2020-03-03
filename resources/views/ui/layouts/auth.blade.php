@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-@include('ui.layouts.includes.head')
+@include('ui.includes.head')
 <body>
 <div id="app" class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">

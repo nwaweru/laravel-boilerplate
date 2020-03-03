@@ -11,37 +11,31 @@
 |
 */
 
-Route::match(['get', 'put'], '/users/welcome/{token}', 'Auth\WelcomeController@setPassword')->name('users.welcome');
+
+Route::get('/', 'WelcomeController@index')->name('welcome');
+Route::get('/home', 'HomeController@index')->name('home')->middleware(['auth', 'verified']);
 
 Auth::routes([
     'verify' => true,
 ]);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', 'WelcomeController@index')->name('welcome');
-
-    Route::name('profile.')->group(function () {
-        Route::get('/profile/{user}/edit', 'ProfileController@edit')->name('edit');
-        Route::put('/profile/{user}', 'ProfileController@update')->name('update');
-    });
-});
+Route::match(['get', 'put'], '/users/{token}/welcome', 'Auth\WelcomeController@setPassword')->name('users.welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
+    Route::resource('users', 'UserController')->except('show', 'edit', 'update');
+});
 
-    Route::namespace('Admin')->name('admin.')->prefix('setup/')->group(function () {
-        Route::get('/users/{user}/delete', 'UserController@delete')->name('users.delete');
-        Route::resource('users', 'UserController');
+Route::resource('users', 'UserController')->only('show', 'edit', 'update')->middleware('auth');
 
-        Route::get('/roles/{role}/delete', 'RoleController@delete')->name('roles.delete');
-        Route::resource('roles', 'RoleController');
+Route::namespace('Admin')->middleware(['auth', 'verified'])->name('admin.')->prefix('setup/')->group(function () {
+    Route::get('/roles/{role}/delete', 'RoleController@delete')->name('roles.delete');
+    Route::resource('roles', 'RoleController');
 
-        Route::get('/permissionGroups/{permissionGroup}/delete', 'PermissionGroupController@delete')->name('permissionGroups.delete');
-        Route::resource('permissionGroups', 'PermissionGroupController');
+    Route::resource('permissionGroups', 'PermissionGroupController')->except('index', 'show', 'destroy');
 
-        Route::get('/permissions/{permission}/delete', 'PermissionController@delete')->name('permissions.delete');
-        Route::resource('permissions', 'PermissionController');
+    Route::get('/permissions/{permission}/delete', 'PermissionController@delete')->name('permissions.delete');
+    Route::resource('permissions', 'PermissionController');
 
-        Route::get('/audits', 'AuditController@auditing')->name('auditing.index');
-    });
+    Route::get('/audits', 'AuditController@auditing')->name('auditing.index');
 });

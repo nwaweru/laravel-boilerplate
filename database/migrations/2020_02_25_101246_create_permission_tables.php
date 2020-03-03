@@ -25,7 +25,7 @@ class CreatePermissionTables extends Migration
             $table->string('guard_name')->default('web');
             $table->timestamps();
 
-            $table->foreign('permission_group_id')->references('id')->on('permission_groups');
+            $table->foreign('permission_group_id')->references('id')->on('permission_groups')->onDelete('cascade');
         });
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {

@@ -107,7 +107,7 @@ return [
              * The disk names on which the backups will be stored.
              */
             'disks' => [
-                'local',
+                'dropbox',
             ],
         ],
 
@@ -130,7 +130,7 @@ return [
             BackupHasFailed::class => ['mail'],
             UnhealthyBackupWasFound::class => ['mail'],
             CleanupHasFailed::class => ['mail'],
-            BackupWasSuccessful::class => ['mail'],
+            BackupWasSuccessful::class => ['mail', 'slack'],
             HealthyBackupWasFound::class => ['mail'],
             CleanupWasSuccessful::class => ['mail'],
         ],
@@ -151,7 +151,7 @@ return [
         ],
 
         'slack' => [
-            'webhook_url' => '',
+            'webhook_url' => env('BACKUP_NOTIFICATION_SLACK'),
 
             /*
              * If this is set to null the default channel of the webhook will be used.
@@ -172,7 +172,7 @@ return [
      */
     'monitor_backups' => [
         [
-            'name' => env('APP_NAME', 'laravel-backup'),
+            'name' => env('BACKUP_NAME'),
             'disks' => ['local'],
             'health_checks' => [
                 MaximumAgeInDays::class => 1,

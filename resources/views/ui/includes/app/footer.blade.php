@@ -1,7 +1,7 @@
 <footer class="footer bg-white">
     <div class="d-sm-flex justify-content-center justify-content-sm-between">
         <span class="text-center text-sm-left d-block d-sm-inline-block">
-            Copyright &copy; <a href="{{ route('welcome') }}">{{ config('app.name') }}</a> {{ date('Y') }}.
+            Copyright &copy; <a href="{{ route('welcome') }}" class="card-link">{{ config('app.name') }}</a> {{ date('Y') }}.
             All rights reserved.
         </span>
         <small class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">

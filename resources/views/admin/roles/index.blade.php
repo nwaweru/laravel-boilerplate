@@ -24,16 +24,12 @@
             $('#roles').DataTable({
                 responsive: true,
                 paging: false,
-                scrollY: '40vh',
+                scrollY: '50vh',
                 scrollCollapse: true,
                 ajax: '{{ route('admin.roles.index') }}',
                 columns: [
-                    {data: 'name', name: 'name'},
-                    {data: 'actions', name: 'actions', orderable: false, searchable: false}
+                    {data: 'name', name: 'name'}
                 ],
-                createdRow: function (row, data, dataIndex) {
-                    $(row).find('td:eq(1)').attr('class', 'text-right');
-                },
                 fnDrawCallback: function (settings) {
                     $(settings.nTHead).hide();
                 }

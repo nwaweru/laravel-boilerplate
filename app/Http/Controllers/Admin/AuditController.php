@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Contracts\Support\Renderable;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Support\Renderable;
 
 class AuditController extends Controller
 {

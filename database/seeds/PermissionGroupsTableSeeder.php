@@ -43,7 +43,7 @@ class PermissionGroupsTableSeeder extends Seeder
             ],
             [
                 'uuid' => $this->generateUuid(),
-                'name' => 'Audit',
+                'name' => 'Audits',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

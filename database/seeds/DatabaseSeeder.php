@@ -14,10 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionGroupsTableSeeder::class,
             PermissionsTableSeeder::class,
-        ]);
-
-        $this->call([
-            SuperUserSeeder::class,
             UsersTableSeeder::class,
         ]);
     }

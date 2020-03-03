@@ -7,14 +7,16 @@ use App\Models\Permission as MyPermission;
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
+use Yajra\DataTables\DataTables;
 
 class PermissionController extends Controller
 {
@@ -24,43 +26,25 @@ class PermissionController extends Controller
      * Display a listing of the resource.
      *
      * @return View
+     * @throws AuthorizationException
      */
     public function index()
     {
         $this->authorize('permissions.index');
 
         if (request()->ajax()) {
-            $permissions = MyPermission::with('permissionGroup')->get();
-
-            return DataTables::of($permissions)
-                ->addColumn('name', function ($permission) {
-                    if (Auth::user()->can('permissions.show')) {
-                        return '<a class="card-link" href="' . route('admin.permissions.show', ['permission' => $permission->uuid]) . '">' . $permission->name . '</a>';
-                    }
-
-                    return $permission->name;
-                })
+            return DataTables::of(MyPermission::with('permissionGroup')->get())
                 ->addColumn('group', function ($permission) {
-                    if (Auth::user()->can('permissionGroups.show')) {
-                        return '<a class="card-link" href="' . route('admin.permissionGroups.show', ['permissionGroup' => $permission->permissionGroup->uuid]) . '">' . $permission->permissionGroup->name . '</a>';
-                    }
-
                     return $permission->permissionGroup->name;
                 })
-                ->addColumn('actions', function ($permission) {
-                    $actions = '';
-
-                    if (Auth::user()->can('permissions.delete') && !in_array($permission->name, $this->getUserPermissions(Auth::user()))) {
-                        $actions .= '<a class="card-link" href="' . route('admin.permissions.delete', ['permission' => $permission->uuid]) . '"><i title="Delete" class="text-danger fas fa-fw fa-trash-alt"></i></a>';
+                ->addColumn('display_name', function ($permission) {
+                    if (Auth::user()->can('permissions.show')) {
+                        return '<a class="card-link" href="' . route('admin.permissions.show', ['permission' => $permission->uuid]) . '">' . $permission->display_name . '</a>';
                     }
 
-                    if (Auth::user()->can('permissions.edit')) {
-                        $actions .= '<a class="card-link" href="' . route('admin.permissions.edit', ['permission' => $permission->uuid]) . '"><i title="Edit" class="fas fa-fw fa-edit"></i></a>';
-                    }
-
-                    return $actions;
+                    return $permission->display_name;
                 })
-                ->rawColumns(['name', 'group', 'actions'])
+                ->rawColumns(['display_name'])
                 ->toJson();
         }
 
@@ -71,6 +55,7 @@ class PermissionController extends Controller
      * Show the form for creating a new resource.
      *
      * @return View
+     * @throws AuthorizationException
      */
     public function create()
     {
@@ -87,7 +72,8 @@ class PermissionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return Response|RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(Request $request)
     {
@@ -96,7 +82,7 @@ class PermissionController extends Controller
         $request->validate([
             'permission_group' => ['required', 'exists:permission_groups,id'],
             'name' => ['required', 'string', 'max:255', 'unique:permissions,name'],
-            'display_name' => ['required', 'string', 'max:255', 'unique:permissions,name'],
+            'display_name' => ['required', 'string', 'max:255',],
         ]);
 
         try {
@@ -108,7 +94,7 @@ class PermissionController extends Controller
             ]);
 
             return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'success',
                     'text' => 'Permission Created',
                 ],
@@ -117,9 +103,9 @@ class PermissionController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Database Error',
                 ],
             ]);
         }
@@ -128,8 +114,9 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param uuid $uuid
+     * @param string $uuid
      * @return View
+     * @throws AuthorizationException
      */
     public function show($uuid)
     {
@@ -144,8 +131,9 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param uuid $uuid
+     * @param string $uuid
      * @return View
+     * @throws AuthorizationException
      */
     public function edit($uuid)
     {
@@ -161,8 +149,9 @@ class PermissionController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param uuid $uuid
-     * @return Response
+     * @param string $uuid
+     * @return Response|RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
     {
@@ -184,7 +173,7 @@ class PermissionController extends Controller
             ]);
 
             return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid])->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'success',
                     'text' => 'Changes Saved',
                 ],
@@ -193,9 +182,9 @@ class PermissionController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Database Error',
                 ],
             ]);
         }
@@ -204,8 +193,9 @@ class PermissionController extends Controller
     /**
      * Display the specified resource selected for deletion.
      *
-     * @param uuid $uuid
-     * @return View
+     * @param string $uuid
+     * @return View|RedirectResponse
+     * @throws AuthorizationException
      */
     public function delete($uuid)
     {
@@ -213,14 +203,7 @@ class PermissionController extends Controller
 
         $permission = MyPermission::where('uuid', $uuid)->firstOrFail();
 
-        if (in_array($permission->name, $this->getUserPermissions(Auth::user()))) {
-            return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Permission Denied',
-                ],
-            ]);
-        }
+        (in_array($permission->name, $this->getUserPermissions(Auth::user()))) && abort(403);
 
         return view('admin.permissions.delete', [
             'permission' => $permission,
@@ -231,40 +214,41 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param uuid $uuid
-     * @return Response
+     * @param string $uuid
+     * @return Response|RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy($uuid)
     {
         $this->authorize('permissions.delete');
 
-        $permission = Permission::where('uuid', $uuid)->firstOrFail();
+        $permission = MyPermission::where('uuid', $uuid)->firstOrFail();
 
-        if (in_array($permission->name, $this->getUserpermissions(Auth::user()))) {
-            return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Permission Denied',
-                ],
-            ]);
-        }
+        (in_array($permission->name, $this->getUserPermissions(Auth::user()))) && abort(403);
 
         try {
+            $permissionGroup = PermissionGroup::find($permission->permissionGroup->id);
+
+            // Delete the permission group if this is the last permission associated with it.
+            if ($permissionGroup->permissions->count() === 1) {
+                $permissionGroup->delete();
+            }
+
             $permission->delete();
 
             return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'success',
-                    'text' => 'Role Deleted',
+                    'text' => 'Permission Deleted',
                 ],
             ]);
         } catch (Exception $ex) {
             Log::error($ex);
 
             return redirect()->back()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Database Error',
                 ],
             ]);
         }

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
-use OwenIt\Auditing\Contracts\Auditable;
-use Creativeorange\Gravatar\Facades\Gravatar;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\Auth\ResetPassword as ResetPasswordNotification;
 use App\Notifications\Auth\Verification as EmailVerificationNotification;
 use App\Traits\Utilities;
+use Creativeorange\Gravatar\Facades\Gravatar;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
+use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements Auditable, MustVerifyEmail
 {
@@ -24,7 +25,6 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     protected $fillable = [
         'uuid', 'first_name', 'last_name', 'email', 'email_verified_at', 'password',
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -33,7 +33,6 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
-
     /**
      * The attributes that should be cast to native types.
      *
@@ -42,6 +41,16 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the user's preferred locale.
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->locale;
+    }
 
     /**
      * Get the welcome token for new users.
@@ -97,5 +106,16 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
         $user = $this;
 
         return implode(', ', $this->getUserRoles($user));
+    }
+
+    /**
+     * Route notifications for the Slack channel.
+     *
+     * @param Notification $notification
+     * @return string
+     */
+    public function routeNotificationForSlack($notification)
+    {
+        return '';
     }
 }

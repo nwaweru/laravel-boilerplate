@@ -2,10 +2,10 @@
 
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
-use Illuminate\Database\Seeder;
-use Spatie\Permission\PermissionRegistrar;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\PermissionRegistrar;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class PermissionsTableSeeder extends Seeder
             'roles' => PermissionGroup::where('name', 'Roles')->first(),
             'permissionGroups' => PermissionGroup::where('name', 'Permission Groups')->first(),
             'permissions' => PermissionGroup::where('name', 'Permissions')->first(),
-            'audit' => PermissionGroup::where('name', 'Audit')->first(),
+            'audits' => PermissionGroup::where('name', 'Audits')->first(),
         ];
 
         $users = [
@@ -202,7 +202,7 @@ class PermissionsTableSeeder extends Seeder
 
         $audit = [
             [
-                'permission_group_id' => $permissionGroup['audit']->id,
+                'permission_group_id' => $permissionGroup['audits']->id,
                 'uuid' => $this->generateUuid(),
                 'name' => 'auditing.index',
                 'display_name' => 'Laravel Auditing',

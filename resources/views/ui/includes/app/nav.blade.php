@@ -18,7 +18,7 @@
                 </a>
             </li>
             <li class="nav-item nav-profile">
-                <a class="nav-link" href="{{ route('profile.edit', ['user' => Auth::user()->uuid]) }}">
+                <a class="nav-link" href="{{ route('users.show', ['user' => Auth::user()->uuid]) }}">
                     <div class="nav-profile-img">
                         <img src="{{ Auth::user()->gravatar }}"
                              alt="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}'s Profile">
@@ -29,17 +29,18 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('logout') }}"
+                <a class="nav-link"
+                   href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-power-off" title="Logout"></i>
                 </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                      style="display: none;">
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
             </li>
         </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+                type="button"
                 data-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
         </button>

@@ -4,20 +4,22 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\WelcomeToken;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Exception;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class WelcomeController extends Controller
 {
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param uuid $token
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function setPassword(Request $request, $token)
     {
@@ -35,21 +37,20 @@ class WelcomeController extends Controller
                     'password' => Hash::make($request->password),
                 ]);
 
-                $welcomeToken->delete();
+                $user->welcomeToken->delete();
 
-                return redirect()->route('profile.edit', ['user' => $user->uuid])->with([
-                    'alert' => (object) [
-                        'type' => 'success',
-                        'text' => 'Changes Saved',
-                    ],
-                ]);
+                if (Auth::attempt($request->only('email', 'password'))) {
+                    return redirect()->route('home');
+                }
+
+                return redirect()->route('login');
             } catch (Exception $ex) {
                 Log::error($ex);
 
                 return redirect()->back()->with([
-                    'alert' => (object) [
+                    'alert' => (object)[
                         'type' => 'danger',
-                        'text' => 'Database Error Occurred',
+                        'text' => 'Database Error',
                     ],
                 ]);
             }

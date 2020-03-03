@@ -6,145 +6,83 @@ use App\Http\Controllers\Controller;
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Permission;
 
 class PermissionGroupController extends Controller
 {
     use Utilities;
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return View
-     */
-    public function index()
-    {
-        $this->authorize('permissions.index');
-
-        if (request()->ajax()) {
-            $permissionGroups = PermissionGroup::query();
-
-            return DataTables::of($permissionGroups)
-                ->addColumn('name', function ($permissionGroup) {
-                    if (Auth::user()->can('permissions.show')) {
-                        return '<a class="card-link" href="' . route('admin.permissionGroups.show', ['permissionGroup' => $permissionGroup->uuid]) . '">' . $permissionGroup->name . '</a>';
-                    }
-
-                    return $permissionGroup->name;
-                })
-                ->addColumn('actions', function ($permissionGroup) {
-                    $actions = '';
-
-                    if (Auth::user()->can('permissions.delete') && !in_array($permissionGroup->id, $this->getUserPermissionGroups(Auth::user()))) {
-                        $actions .= '<a class="card-link" href="' . route('admin.permissionGroups.delete', ['permissionGroup' => $permissionGroup->uuid]) . '"><i title="Delete" class="text-danger fas fa-fw fa-trash-alt"></i></a>';
-                    }
-
-                    if (Auth::user()->can('permissions.edit')) {
-                        $actions .= '<a class="card-link" href="' . route('admin.permissionGroups.edit', ['permissionGroup' => $permissionGroup->uuid]) . '"><i title="Edit" class="fas fa-fw fa-edit"></i></a>';
-                    }
-
-                    return $actions;
-                })
-                ->rawColumns(['name', 'actions'])
-                ->toJson();
-        }
-
-        return view('admin.permissionGroups.index');
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return View
+     * @throws AuthorizationException
      */
     public function create()
     {
-        $this->authorize('permissions.create');
+        $this->authorize('permissionGroups.create');
 
-        $permissionGroupGroups = PermissionGroupGroup::orderBy('name', 'asc')->get();
-
-        return view('admin.permissions.create', [
-            'PermissionGroupGroups' => $permissionGroupGroups,
-        ]);
+        return view('admin.permissionGroups.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return Response|RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(Request $request)
     {
-        $this->authorize('permissions.create');
+        $this->authorize('permissionGroups.create');
 
         $request->validate([
-            'PermissionGroup_group' => ['required', 'exists:PermissionGroup_groups,id'],
-            'name' => ['required', 'string', 'max:255', 'unique:PermissionGroups,name'],
-            'display_name' => ['required', 'string', 'max:255', 'unique:PermissionGroups,name'],
+            'name' => ['required', 'string', 'max:255', 'unique:permission_groups,name'],
         ]);
 
         try {
-            PermissionGroup::create([
-                'PermissionGroup_group_id' => $request->PermissionGroup_group,
+            $permissionGroup = PermissionGroup::create([
                 'uuid' => $this->generateUuid(),
                 'name' => $request->name,
-                'display_name' => $request->display_name,
             ]);
 
-            return redirect()->route('admin.permissionGroups.index')->with([
-                'alert' => (object) [
-                    'type' => 'success',
-                    'text' => 'PermissionGroup Created',
-                ],
-            ]);
+            return redirect()->route('admin.permissions.create', ['permissionGroup' => $permissionGroup->uuid]);
         } catch (Exception $ex) {
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Database Error',
                 ],
             ]);
         }
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param uuid $uuid
-     * @return View
-     */
-    public function show($uuid)
-    {
-        $this->authorize('permissions.show');
-
-        return view('admin.permissions.show', [
-            'PermissionGroup' => MyPermissionGroup::where('uuid', $uuid)->firstOrFail(),
-            'userPermissionGroups' => $this->getUserPermissionGroups(Auth::user()),
-        ]);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param uuid $uuid
+     * @param string $uuid
+     * @param Request $request
      * @return View
+     * @throws AuthorizationException
      */
-    public function edit($uuid)
+    public function edit($uuid, Request $request)
     {
-        $this->authorize('permissions.edit');
+        $this->authorize('permissionGroups.edit');
 
-        return view('admin.permissions.edit', [
-            'PermissionGroup' => MyPermissionGroup::where('uuid', $uuid)->firstOrFail(),
-            'PermissionGroupGroups' => PermissionGroupGroup::orderBy('name', 'asc')->get(),
+        // A permission is needed for the redirect after update.
+        (is_null($request->query('permission'))) && abort(404);
+
+        return view('admin.permissionGroups.edit', [
+            'permissionGroup' => PermissionGroup::where('uuid', $uuid)->firstOrFail(),
         ]);
     }
 
@@ -152,110 +90,38 @@ class PermissionGroupController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param uuid $uuid
-     * @return Response
+     * @param string $uuid
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
     {
-        $this->authorize('permissions.edit');
+        $this->authorize('permissionGroups.edit');
 
         $permissionGroup = PermissionGroup::where('uuid', $uuid)->firstOrFail();
 
+        // A permission is needed for the redirect after update.
+        (is_null($request->query('permission'))) && abort(404);
+
+        $permission = Permission::where('uuid', $request->query('permission'))->firstOrFail();
+
         $request->validate([
-            'PermissionGroup_group' => ['required', 'exists:PermissionGroup_groups,id'],
-            'name' => ['required', 'string', 'max:255', Rule::unique('PermissionGroups')->ignore($permissionGroup->id)],
-            'display_name' => ['required', 'string', 'max:255', Rule::unique('PermissionGroups')->ignore($permissionGroup->id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('permission_groups')->ignore($permissionGroup->id)],
         ]);
 
         try {
             $permissionGroup->update([
-                'PermissionGroup_group_id' => $request->PermissionGroup_group,
                 'name' => $request->name,
-                'display_name' => $request->display_name,
             ]);
 
-            return redirect()->route('admin.permissionGroups.show', ['permissionGroup' => $permissionGroup->uuid])->with([
-                'alert' => (object) [
-                    'type' => 'success',
-                    'text' => 'Changes Saved',
-                ],
-            ]);
+            return redirect()->route('admin.permissions.edit', ['permission' => $permission->uuid]);
         } catch (Exception $ex) {
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object) [
+                'alert' => (object)[
                     'type' => 'danger',
-                    'text' => 'Database Error Occurred',
-                ],
-            ]);
-        }
-    }
-
-    /**
-     * Display the specified resource selected for deletion.
-     *
-     * @param uuid $uuid
-     * @return View
-     */
-    public function delete($uuid)
-    {
-        $this->authorize('permissions.delete');
-
-        $permissionGroup = MyPermissionGroup::where('uuid', $uuid)->firstOrFail();
-
-        if (in_array($permissionGroup->name, $this->getUserPermissionGroups(Auth::user()))) {
-            return redirect()->route('admin.permissionGroups.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'PermissionGroup Denied',
-                ],
-            ]);
-        }
-
-        return view('admin.permissions.delete', [
-            'PermissionGroup' => $permissionGroup,
-            'userPermissionGroups' => $this->getUserPermissionGroups(Auth::user()),
-        ]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param uuid $uuid
-     * @return Response
-     */
-    public function destroy($uuid)
-    {
-        $this->authorize('permissions.delete');
-
-        $permissionGroup = PermissionGroup::where('uuid', $uuid)->firstOrFail();
-
-        if (in_array($permissionGroup->name, $this->getUserPermissionGroups(Auth::user()))) {
-            return redirect()->route('admin.permissionGroups.index')->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'PermissionGroup Denied',
-                ],
-            ]);
-        }
-
-        try {
-            $permissionGroup->delete();
-
-            return redirect()->route('admin.permissionGroups.index')->with([
-                'alert' => (object) [
-                    'type' => 'success',
-                    'text' => 'Role Deleted',
-                ],
-            ]);
-        } catch (Exception $ex) {
-            Log::error($ex);
-
-            return redirect()->back()->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Database Error Occurred',
+                    'text' => 'Database Error',
                 ],
             ]);
         }
