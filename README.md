@@ -17,7 +17,7 @@
 
 ## Installation
 
-1. ```git clone``` the project or use it [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new project
+1. Use this project [as a template](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for your new app.
 1. Update the ```.env``` with your project settings
 1. Setup [Scheduling](https://laravel.com/docs/6.x/scheduling) and [Queues](https://laravel.com/docs/6.x/queues)
 1. Update ```UsersTableSeeder``` with your details.

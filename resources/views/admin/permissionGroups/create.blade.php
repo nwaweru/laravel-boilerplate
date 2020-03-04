@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row justify-content-center mt-4">
-        <div class="col-md-4 col-lg-3">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.permissionGroups.store') }}" novalidate>
@@ -24,7 +24,7 @@
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-block btn-primary">
-                            Create Permission Group
+                            Create Group
                         </button>
                     </form>
                 </div>

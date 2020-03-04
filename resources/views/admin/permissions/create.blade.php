@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row justify-content-center">
-        <div class="col-md-5 col-lg-4">
+        <div class="col-md-5">
             <div class="card">
                 <div class="card-body">
                     <form class="pt-3" method="POST" action="{{ route('admin.permissions.store') }}" novalidate>

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionGroupController extends Controller
 {
@@ -47,6 +48,9 @@ class PermissionGroupController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:permission_groups,name'],
         ]);
 
+
+        $this->clearEmptyPermissionGroups();
+
         try {
             $permissionGroup = PermissionGroup::create([
                 'uuid' => $this->generateUuid(),
@@ -58,7 +62,7 @@ class PermissionGroupController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -109,6 +113,8 @@ class PermissionGroupController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('permission_groups')->ignore($permissionGroup->id)],
         ]);
 
+        $this->clearEmptyPermissionGroups($permissionGroup->uuid);
+
         try {
             $permissionGroup->update([
                 'name' => $request->name,
@@ -119,11 +125,36 @@ class PermissionGroupController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
             ]);
+        }
+    }
+
+    /**
+     * Clear empty permission groups BUT the excluded one.
+     *
+     * @return void
+     * @throws AuthorizationException
+     */
+    private function clearEmptyPermissionGroups($excluded = null)
+    {
+        if (!Auth::user()->can('permissionGroups.create') || !Auth::user()->can('permissionGroups.edit')) {
+            abort(403);
+        }
+
+        $permissionGroups = PermissionGroup::all();
+
+        foreach ($permissionGroups as $group) {
+            if ($group->permissions->count() < 1 && !is_null($excluded) && $excluded !== $group->uuid) {
+                try {
+                    $group->delete();
+                } catch (Exception $ex) {
+                    Log::error($ex);
+                }
+            }
         }
     }
 }
