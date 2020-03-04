@@ -4,7 +4,7 @@
     <blockquote class="blockquote bg-white mb-0 border-white">
         <p class="lead mb-0">
             <a href="{{ route('users.show', ['user' => $user->uuid]) }}"
-               class="card-link">{{ $user->first_name . ' ' . $user->last_name}}</a>
+               class="text-decoration-none">{{ $user->first_name . ' ' . $user->last_name}}</a>
         </p>
         <footer class="blockquote-footer">
             <small>{{ $user->email }}</small>

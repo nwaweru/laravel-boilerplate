@@ -9,7 +9,7 @@
                      alt="{{ (isset($user->first_name) && isset($user->last_name)) ? $user->first_name . ' ' . $user->last_name : 'User Gravatar' }}">
                 @if (!app()->environment('local'))
                     <div class="text-dark mt-2">
-                        <a href="http://gravatar.com" class="card-link" target="_blank">
+                        <a href="http://gravatar.com" class="text-decoration-none" target="_blank">
                             <small>Edit Gravatar</small>
                         </a>
                     </div>

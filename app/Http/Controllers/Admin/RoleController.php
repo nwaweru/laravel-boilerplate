@@ -36,7 +36,7 @@ class RoleController extends Controller
             return DataTables::of(Role::query())
                 ->addColumn('name', function ($role) {
                     if (Auth::user()->can('roles.show')) {
-                        return '<a class="card-link" href="' . route('admin.roles.show', ['role' => $role->uuid]) . '">' . $role->name . '</a>';
+                        return '<a class="text-decoration-none" href="' . route('admin.roles.show', ['role' => $role->uuid]) . '">' . $role->name . '</a>';
                     }
 
                     return $role->name;
@@ -44,8 +44,6 @@ class RoleController extends Controller
                 ->rawColumns(['name'])
                 ->toJson();
         }
-
-        return view('admin.roles.index');
     }
 
     /**
@@ -169,7 +167,7 @@ class RoleController extends Controller
 
             $role->syncPermissions(Permission::whereIn('id', $request->permissions)->pluck('name'));
 
-            return redirect()->route('admin.roles.edit', ['role' => $role->uuid])->with([
+            return redirect()->route('admin.roles.show', ['role' => $role->uuid])->with([
                 'alert' => (object)[
                     'type' => 'success',
                     'text' => 'Changes Saved',

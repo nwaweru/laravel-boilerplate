@@ -8,7 +8,7 @@
                 </tr>
                 <tr>
                     <td class="text-right">Permissions:</td>
-                    <td><b>{{ $role->count() }}</b></td>
+                    <td><b>{{ $role->permissions->count() }}</b></td>
                 </tr>
                 <tr>
                     <td class="text-right">Users:</td>

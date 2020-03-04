@@ -39,7 +39,7 @@ class PermissionController extends Controller
                 })
                 ->addColumn('display_name', function ($permission) {
                     if (Auth::user()->can('permissions.show')) {
-                        return '<a class="card-link" href="' . route('admin.permissions.show', ['permission' => $permission->uuid]) . '">' . $permission->display_name . '</a>';
+                        return '<a class="text-decoration-none" href="' . route('admin.permissions.show', ['permission' => $permission->uuid]) . '">' . $permission->display_name . '</a>';
                     }
 
                     return $permission->display_name;

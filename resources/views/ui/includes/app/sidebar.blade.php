@@ -22,38 +22,18 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('users.index') }}">
                     <span class="menu-title">Users</span>
-                    <i class="fas fa-users-cog menu-icon"></i>
+                    <i class="fas fa-user-tag menu-icon"></i>
                 </a>
             </li>
         @endcan
-
-        @canany(['users.index', 'roles.index', 'permission_groups', 'permissions.index', 'auditing.index'])
+        @canany(['permissionGroups.index', 'permissions.index', 'roles.index',])
             <li class="nav-item">
-                <a class="nav-link"
-                   data-toggle="collapse"
-                   href="#settings-nav"
-                   aria-expanded="false"
-                   aria-controls="settings-nav">
-                    <span class="menu-title">Setup</span>
-                    <i class="fas fa-cogs menu-icon"></i>
+                <a class="nav-link" href="{{ route('admin.permissions.index') }}">
+                    <span class="menu-title">Access Control</span>
+                    <i class="fas fa-clipboard-list menu-icon"></i>
                 </a>
-                <div class="collapse" id="settings-nav">
-                    <ul class="nav flex-column sub-menu">
-                        @can('roles.index')
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.roles.index') }}">Roles</a>
-                            </li>
-                        @endcan
-                        @can('permissions.index')
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.permissions.index') }}">Permissions</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </div>
             </li>
-        @endcanany
-
+        @endcan
         @can('auditing.index')
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.auditing.index') }}">

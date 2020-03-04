@@ -2,10 +2,6 @@
     @foreach ($permissionGroups as $group)
         @if ($group->permissions->count())
             <div class="col-md-6">
-                <a href="{{ route('admin.permissionGroups.show', ['permissionGroup' => $group->uuid]) }}"
-                   class="card-link">
-                    {{ $group->name }}
-                </a>
                 @foreach ($group->permissions as $permission)
                     <div class="form-check mx-3">
                         <label class="form-check-label">

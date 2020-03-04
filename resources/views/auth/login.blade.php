@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row flex-grow">
-        <div class="col-md-4 col-lg-3 mx-auto">
+        <div class="col-md-4 mx-auto">
             <div class="auth-form-light p-5">
                 <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
@@ -33,20 +33,16 @@
                         {{ __('Login') }}
                     </button>
                     @if (Route::has('password.request') || Route::has('register'))
-                        <div class="row mt-4">
+                        <div class="clearfix mt-4 text-center">
                             @if (Route::has('password.request'))
-                                <div class="col-md-6 text-center">
-                                    <a class="card-link" href="{{ route('password.request') }}">
-                                        Reset Password
-                                    </a>
-                                </div>
+                                <a href="{{ route('password.request') }}" class="text-decoration-none float-left">
+                                    Reset Password
+                                </a>
                             @endif
                             @if (Route::has('register'))
-                                <div class="col-md-6 text-center">
-                                    <a href="{{ route('register') }}" class="card-link">
-                                        Create Account
-                                    </a>
-                                </div>
+                                <a href="{{ route('register') }}" class="text-decoration-none float-right">
+                                    Create Account
+                                </a>
                             @endif
                         </div>
                     @endif

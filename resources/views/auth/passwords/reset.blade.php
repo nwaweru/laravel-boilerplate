@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row flex-grow">
-        <div class="col-md-4 col-lg-3 mx-auto">
+        <div class="col-md-4 mx-auto">
             <div class="auth-form-light p-5">
                 <form method="POST" action="{{ route('password.update') }}" novalidate>
                     @csrf
@@ -39,7 +39,7 @@
                         Reset Password
                     </button>
                     <div class="text-center mt-4">
-                        <a href="{{ route('login') }}" class="card-link">Login</a>
+                        <a href="{{ route('login') }}" class="text-decoration-none">Login</a>
                     </div>
                 </form>
             </div>

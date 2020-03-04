@@ -2,33 +2,35 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="clearfix">
-                        <h1 class="float-left">Permissions</h1>
-                        @canany(['permissions.create', 'permissionGroups.create'])
-                            <div class="float-right">
-                                @can('permissions.create')
-                                    <a href="{{ route('admin.permissions.create') }}"
-                                       class="btn btn-primary btn-sm mx-2">
-                                        <i class="fas fa-fw fa-plus"></i> Permission
-                                    </a>
-                                @endcan
-                            </div>
-                        @endcanany
-                    </div>
-                    <table id="permissions" class="table table-hover table-borderless dt-responsive nowrap">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Permission Group</th>
-                            <th scope="col">Display Name</th>
-                            <th scope="col">Name</th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
+        <div class="col-md-4">
+            <h3>Roles</h3>
+            <table id="roles" class="table table-borderless dt-responsive nowrap bg-white"></table>
+            @can('roles.create')
+                <a href="{{ route('admin.roles.create') }}"
+                   class="btn btn-primary btn-sm mt-4">
+                    <i class="fas fa-fw fa-plus"></i> Role
+                </a>
+            @endcan
+        </div>
+        <div class="col-md-8">
+            <h3 class="mb-0">Permissions</h3>
+            <table id="permissions" class="table table-borderless dt-responsive nowrap bg-white">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Group</th>
+                    <th scope="col">Permission</th>
+                    <th scope="col">Route</th>
+                </tr>
+                </thead>
+            </table>
+            @can('permissions.create')
+                <p class="text-right">
+                    <a href="{{ route('admin.permissions.create') }}"
+                       class="btn btn-dark btn-sm">
+                        <i class="fas fa-fw fa-plus"></i> Permission
+                    </a>
+                </p>
+            @endcan
         </div>
     </div>
 @endsection
@@ -43,6 +45,18 @@
                     {data: 'display_name'},
                     {data: 'name'},
                 ]
+            });
+
+            $('#roles').DataTable({
+                searching: false,
+                bInfo: false,
+                ajax: '{{ route('admin.roles.index') }}',
+                columns: [
+                    {data: 'name'}
+                ],
+                fnDrawCallback: function (settings) {
+                    $(settings.nTHead).hide();
+                }
             });
         });
     </script>

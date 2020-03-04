@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row flex-grow">
-        <div class="col-md-4 col-lg-3 mx-auto">
+        <div class="col-md-4 mx-auto">
             <div class="auth-form-light p-5">
                 <form method="POST" action="{{ route('register') }}" novalidate>
                     @csrf
@@ -60,7 +60,7 @@
                         Create Account
                     </button>
                     <div class="text-center mt-4">
-                        Already have an account? <a href="{{ route('login') }}" class="card-link">Login</a>
+                        Already have an account? <a href="{{ route('login') }}" class="text-decoration-none">Login</a>
                     </div>
                 </form>
             </div>

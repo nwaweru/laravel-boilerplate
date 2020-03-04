@@ -39,7 +39,7 @@ class UserController extends Controller
 
                     if (Auth::user()->can('users.show')) {
                         return '
-                            <a class="card-link" href="' . route('users.show', ['user' => $user->uuid]) . '">' . $name . '</a>
+                            <a class="text-decoration-none" href="' . route('users.show', ['user' => $user->uuid]) . '">' . $name . '</a>
                             <small class="float-right">' . $user->role . '</small>
                         ';
                     }

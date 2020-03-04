@@ -45,7 +45,7 @@
                                     <div class="col-md-6">
                                         <div class="p-3">
                                             <p>
-                                                <a class="card-link"
+                                                <a class="text-decoration-none"
                                                    data-toggle="collapse"
                                                    href="#permission-group-{{ $group->uuid }}"
                                                    role="button"

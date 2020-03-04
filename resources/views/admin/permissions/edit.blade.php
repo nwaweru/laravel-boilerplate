@@ -28,7 +28,7 @@
                             @can('permissionGroups.edit')
                                 <small id="permissionGroupHelp" class="form-text text-muted pt-2 px-4">
                                     <a href="{{ route('admin.permissionGroups.edit', ['permissionGroup' => $permission->permissionGroup->uuid, 'permission' => $permission->uuid]) }}"
-                                       class="card-link">
+                                       class="text-decoration-none">
                                         Edit Permissions Group
                                     </a>
                                 </small>
