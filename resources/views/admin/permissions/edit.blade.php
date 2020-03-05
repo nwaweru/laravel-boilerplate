@@ -9,9 +9,9 @@
                     @method('PUT')
                     @csrf
                     <div class="form-group">
-                        <label for="permission_group" class="sr-only">Permission Group</label>
+                        <label for="permission_group" class="sr-only">Group</label>
                         <select id="permission_group" name="permission_group" class="form-control @error('permission_group') is-invalid @enderror" required @if(Auth::user()->can('permissionGroups.edit')) aria-describedby="permissionGroupHelp" @endif>
-                            <option value="">Select Permission Group</option>
+                            <option value="">Select Group</option>
                             @foreach($permissionGroups as $group)
                             <option value="{{ $group->id }}" {{ (old('permission_group') && old('permission_group') == $group->id || $group->id == $permission->permissionGroup->id) ? 'selected' : null }}>
                                 {{ $group->name }}

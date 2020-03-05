@@ -99,15 +99,15 @@ class PermissionGroupController extends Controller
     {
         $this->authorize('permissionGroups.edit');
 
-        $permissionGroup = PermissionGroup::where('uuid', $uuid)->firstOrFail();
-
         $permission = $this->verifyRequest($request);
+
+        $permissionGroup = PermissionGroup::where('uuid', $uuid)->firstOrFail();
 
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('permission_groups')->ignore($permissionGroup->id)],
         ]);
 
-        $this->clearEmptyPermissionGroups($permissionGroup->uuid);
+        $this->deleteEmptyPermissionGroups($permissionGroup->uuid);
 
         try {
             $permissionGroup->update([
@@ -131,7 +131,6 @@ class PermissionGroupController extends Controller
      * Ensure a permission is present when editing a group.
      *
      * @return void
-     * @throws AuthorizationException
      */
     private function verifyRequest(Request $request)
     {
@@ -140,5 +139,23 @@ class PermissionGroupController extends Controller
         }
 
         return Permission::where('uuid', $request->query('permission'))->firstOrFail();
+    }
+
+    /**
+     * Delete all empty permission groups apart from the excluded one.
+     *
+     * @return void
+     */
+    private function deleteEmptyPermissionGroups($excluded)
+    {
+        foreach (PermissionGroup::all() as $group) {
+            if (!$group->permissions->count() && $group->uuid !== $excluded) {
+                try {
+                    $group->delete();
+                } catch (Exception $ex) {
+                    Log::error($ex);
+                }
+            }
+        }
     }
 }

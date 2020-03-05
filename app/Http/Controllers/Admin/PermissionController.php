@@ -17,6 +17,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Artisan;
 
 class PermissionController extends Controller
 {
@@ -85,7 +86,7 @@ class PermissionController extends Controller
             'display_name' => ['required', 'string', 'max:255',],
         ]);
 
-        try {
+        // try {
             $permission = Permission::create([
                 'permission_group_id' => $request->permission_group,
                 'uuid' => $this->generateUuid(),
@@ -94,16 +95,16 @@ class PermissionController extends Controller
             ]);
 
             return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid]);
-        } catch (Exception $ex) {
-            Log::error($ex);
+        // } catch (Exception $ex) {
+        //     Log::error($ex);
 
-            return redirect()->back()->withInput()->with([
-                'alert' => (object)[
-                    'type' => 'danger',
-                    'text' => 'Database Error',
-                ],
-            ]);
-        }
+        //     return redirect()->back()->withInput()->with([
+        //         'alert' => (object)[
+        //             'type' => 'danger',
+        //             'text' => 'Database Error',
+        //         ],
+        //     ]);
+        // }
     }
 
     /**
@@ -167,12 +168,7 @@ class PermissionController extends Controller
                 'display_name' => $request->display_name,
             ]);
 
-            return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid])->with([
-                'alert' => (object)[
-                    'type' => 'success',
-                    'text' => 'Changes Saved',
-                ],
-            ]);
+            return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid]);
         } catch (Exception $ex) {
             Log::error($ex);
 
@@ -225,11 +221,14 @@ class PermissionController extends Controller
             $permissionGroup = PermissionGroup::find($permission->permissionGroup->id);
 
             // Delete the permission group if this is the last permission associated with it.
-            if ($permissionGroup->permissions->count() === 1) {
+            if ($permissionGroup->permissions->count() <= 1) {
                 $permissionGroup->delete();
             }
 
             $permission->delete();
+
+            Artisan::call('cache:forget spatie.permission.cache');
+            Artisan::call('cache:clear');
 
             return redirect()->route('admin.permissions.index')->with([
                 'alert' => (object)[
