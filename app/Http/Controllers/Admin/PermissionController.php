@@ -86,7 +86,7 @@ class PermissionController extends Controller
             'display_name' => ['required', 'string', 'max:255',],
         ]);
 
-        // try {
+        try {
             $permission = Permission::create([
                 'permission_group_id' => $request->permission_group,
                 'uuid' => $this->generateUuid(),
@@ -95,16 +95,16 @@ class PermissionController extends Controller
             ]);
 
             return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid]);
-        // } catch (Exception $ex) {
-        //     Log::error($ex);
+        } catch (Exception $ex) {
+            Log::error($ex);
 
-        //     return redirect()->back()->withInput()->with([
-        //         'alert' => (object)[
-        //             'type' => 'danger',
-        //             'text' => 'Database Error',
-        //         ],
-        //     ]);
-        // }
+            return redirect()->back()->withInput()->with([
+                'alert' => (object)[
+                    'type' => 'danger',
+                    'text' => 'Database Error',
+                ],
+            ]);
+        }
     }
 
     /**
