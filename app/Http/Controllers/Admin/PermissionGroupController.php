@@ -45,27 +45,37 @@ class PermissionGroupController extends Controller
         $this->authorize('permissionGroups.create');
 
         $request->validate([
+            'permission' => ['nullable', 'exists:permissions,uuid'],
             'name' => ['required', 'string', 'max:255', 'unique:permission_groups,name'],
         ]);
 
 
-        try {
-            $permissionGroup = PermissionGroup::create([
-                'uuid' => $this->generateUuid(),
-                'name' => $request->name,
-            ]);
+        // try {
+        $permissionGroup = PermissionGroup::create([
+            'uuid' => $this->generateUuid(),
+            'name' => $request->name,
+        ]);
 
-            return redirect()->route('admin.permissions.create', ['permissionGroup' => $permissionGroup->uuid]);
-        } catch (Exception $ex) {
-            Log::error($ex);
+        if (!is_null($request->permission)) {
+            $permission = Permission::where('uuid', $request->permission)->firstOrFail();
 
-            return redirect()->back()->withInput()->with([
-                'alert' => (object) [
-                    'type' => 'danger',
-                    'text' => 'Database Error',
-                ],
+            return redirect()->route('admin.permissions.edit', [
+                'permission' => $permission->uuid,
+                'permissionGroup' => $permissionGroup->uuid,
             ]);
         }
+
+        return redirect()->route('admin.permissions.create', ['permissionGroup' => $permissionGroup->uuid]);
+        // } catch (Exception $ex) {
+        //     Log::error($ex);
+
+        //     return redirect()->back()->withInput()->with([
+        //         'alert' => (object) [
+        //             'type' => 'danger',
+        //             'text' => 'Database Error',
+        //         ],
+        //     ]);
+        // }
     }
 
     /**
@@ -114,7 +124,9 @@ class PermissionGroupController extends Controller
                 'name' => $request->name,
             ]);
 
-            return redirect()->route('admin.permissions.edit', ['permission' => $permission->uuid]);
+            return redirect()->route('admin.permissions.edit', [
+                'permission' => $permission->uuid,
+            ]);
         } catch (Exception $ex) {
             Log::error($ex);
 
@@ -134,7 +146,7 @@ class PermissionGroupController extends Controller
      */
     private function verifyRequest(Request $request)
     {
-        if (!$request->has('permission')) {
+        if (!$request->has('permission') || is_null($request->permission)) {
             abort(404);
         }
 
