@@ -49,8 +49,6 @@ class PermissionGroupController extends Controller
         ]);
 
 
-        $this->clearEmptyPermissionGroups();
-
         try {
             $permissionGroup = PermissionGroup::create([
                 'uuid' => $this->generateUuid(),
@@ -82,8 +80,7 @@ class PermissionGroupController extends Controller
     {
         $this->authorize('permissionGroups.edit');
 
-        // A permission is needed for the redirect after update.
-        (is_null($request->query('permission'))) && abort(404);
+        $this->verifyRequest($request);
 
         return view('admin.permissionGroups.edit', [
             'permissionGroup' => PermissionGroup::where('uuid', $uuid)->firstOrFail(),
@@ -104,10 +101,7 @@ class PermissionGroupController extends Controller
 
         $permissionGroup = PermissionGroup::where('uuid', $uuid)->firstOrFail();
 
-        // A permission is needed for the redirect after update.
-        (is_null($request->query('permission'))) && abort(404);
-
-        $permission = Permission::where('uuid', $request->query('permission'))->firstOrFail();
+        $permission = $this->verifyRequest($request);
 
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('permission_groups')->ignore($permissionGroup->id)],
@@ -134,27 +128,17 @@ class PermissionGroupController extends Controller
     }
 
     /**
-     * Clear empty permission groups BUT the excluded one.
+     * Ensure a permission is present when editing a group.
      *
      * @return void
      * @throws AuthorizationException
      */
-    private function clearEmptyPermissionGroups($excluded = null)
+    private function verifyRequest(Request $request)
     {
-        if (!Auth::user()->can('permissionGroups.create') || !Auth::user()->can('permissionGroups.edit')) {
-            abort(403);
+        if (!$request->has('permission')) {
+            abort(404);
         }
 
-        $permissionGroups = PermissionGroup::all();
-
-        foreach ($permissionGroups as $group) {
-            if ($group->permissions->count() < 1 && !is_null($excluded) && $excluded !== $group->uuid) {
-                try {
-                    $group->delete();
-                } catch (Exception $ex) {
-                    Log::error($ex);
-                }
-            }
-        }
+        return Permission::where('uuid', $request->query('permission'))->firstOrFail();
     }
 }

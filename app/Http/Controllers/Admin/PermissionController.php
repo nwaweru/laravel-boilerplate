@@ -86,19 +86,14 @@ class PermissionController extends Controller
         ]);
 
         try {
-            Permission::create([
+            $permission = Permission::create([
                 'permission_group_id' => $request->permission_group,
                 'uuid' => $this->generateUuid(),
                 'name' => $request->name,
                 'display_name' => $request->display_name,
             ]);
 
-            return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object)[
-                    'type' => 'success',
-                    'text' => 'Permission Created',
-                ],
-            ]);
+            return redirect()->route('admin.permissions.show', ['permission' => $permission->uuid]);
         } catch (Exception $ex) {
             Log::error($ex);
 

@@ -18,7 +18,7 @@
             </a>
         </li>
         @can('users.index')
-        <li class="nav-item">
+        <li class="nav-item {{ (Request::is('setup/users/*') || Request::is('users/*')) ? 'active' : null }}">
             <a class="nav-link" href="{{ route('users.index') }}">
                 <span class="menu-title">Users</span>
                 <i class="fas fa-user-tag menu-icon"></i>
@@ -26,7 +26,7 @@
         </li>
         @endcan
         @canany(['permissionGroups.index', 'permissions.index', 'roles.index',])
-        <li class="nav-item">
+        <li class="nav-item {{ (Request::is('setup/roles/*') || Request::is('setup/permissions/*') || Request::is('setup/permissionGroups/*')) ? 'active' : null }}">
             <a class="nav-link" href="{{ route('admin.permissions.index') }}">
                 <span class="menu-title">Access Control</span>
                 <i class="fas fa-clipboard-list menu-icon"></i>
