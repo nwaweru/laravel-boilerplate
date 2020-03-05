@@ -3,17 +3,15 @@
 @section('content')
     <div class="row">
         <div class="col-md-4">
-            <h3>Roles</h3>
             <table id="roles" class="table table-borderless dt-responsive nowrap bg-white"></table>
             @can('roles.create')
                 <a href="{{ route('admin.roles.create') }}"
-                   class="btn btn-primary btn-sm mt-4">
+                   class="btn btn-primary btn-sm mt-2">
                     <i class="fas fa-fw fa-plus"></i> Role
                 </a>
             @endcan
         </div>
         <div class="col-md-8">
-            <h3 class="mb-0">Permissions</h3>
             <table id="permissions" class="table table-borderless dt-responsive nowrap bg-white">
                 <thead class="thead-dark">
                 <tr>

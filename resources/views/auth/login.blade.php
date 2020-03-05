@@ -3,7 +3,7 @@
 @section('content')
     <div class="row flex-grow">
         <div class="col-md-4 mx-auto">
-            <div class="auth-form-light p-5">
+            <div class="auth-form-light p-5 border border-dark">
                 <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
                     <div class="form-group">
