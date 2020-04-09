@@ -3,7 +3,7 @@
 ## Project Features
 
 1. Automated backups using [Laravel Backup](https://github.com/spatie/laravel-backup)
-1. User roles & permission management using [Laravel Permission](https://github.com/spatie/laravel-permission)
+1. ACL using [Laravel Permission](https://github.com/spatie/laravel-permission)
 1. Eloquent auditing using [Laravel Auditing](https://github.com/owen-it/laravel-auditing)
 1. Avatar management using [Gravatar](https://github.com/creativeorange/gravatar)
 1. Customizable error pages from [Laravel Collective](https://github.com/laravelcollective/errors)
