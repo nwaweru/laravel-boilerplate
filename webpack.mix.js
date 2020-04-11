@@ -9,9 +9,9 @@ mix.styles([
 ], 'public/css/landing.css');
 
 mix.scripts([
-    'node_modules/jquery/dist/jquery.min.js',
-    'node_modules/popper.js/dist/popper.min.js',
-    'node_modules/bootstrap/dist/js/bootstrap.min.js',
+    'resources/themes/miri/src/vendors/jquery/dist/jquery.min.js',
+    'resources/themes/miri/src/vendors/popper.js/dist/popper.min.js',
+    'resources/themes/miri/src/vendors/bootstrap/dist/js/bootstrap.min.js',
     'resources/themes/miri/src/js/miri-ui-kit.js'
 ], 'public/js/landing.js');
 

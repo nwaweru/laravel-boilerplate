@@ -112,7 +112,7 @@
                 </div>
                 <div class="col-md-6 d-md-flex justify-content-end">
                     <div class="card bg-dark text-white count-card">
-                        <img src="assets/images/count-card-bg.jpg" alt="about 1" class="card-img">
+                        <img src="{{ asset('img/miri/count-card-bg.jpg') }}" alt="about 1" class="card-img">
                         <div class="card-img-overlay">
                             <div class="count-box bg-success text">
                                 <span class="h2 text-white">30K</span>
@@ -148,7 +148,7 @@
                             voluptatum ea beatae sunt rerum! Saepe.</p>
                         <p><button class="btn btn-primary">Learn more</button></p>
                 </div>
-                <div class="col-md-6 text-right"><img src="assets/images/about.png" alt="About" class="img-fluid"></div>
+                <div class="col-md-6 text-right"><img src="{{ asset('img/miri/about.png') }}" alt="About" class="img-fluid"></div>
             </div>
         </div>
     </section>
@@ -158,7 +158,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="team-card card border-0 raise-on-hover">
-                        <img src="assets/images/team-1.jpg" alt="Team 1" class="card-img-top">
+                        <img src="{{ asset('img/miri/team-1.jpg') }}" alt="Team 1" class="card-img-top">
                         <div class="card-body px-0">
                             <h5 class="card-title mb-0">Afonso Pinto</h5>
                             <p class=" font-weight-medium designation">Founded & Chairman</p>
@@ -173,7 +173,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="team-card card border-0 raise-on-hover">
-                        <img src="assets/images/team-2.jpg" alt="Team 2" class="card-img-top">
+                        <img src="{{ asset('img/miri/team-2.jpg') }}" alt="Team 2" class="card-img-top">
                         <div class="card-body px-0">
                             <h5 class="card-title mb-0">Irene Sotelo</h5>
                             <p class=" font-weight-medium designation">Frontend Developer</p>
@@ -188,7 +188,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="team-card card border-0 raise-on-hover">
-                        <img src="assets/images/team-3.jpg" alt="Team 3" class="card-img-top">
+                        <img src="{{ asset('img/miri/team-3.jpg') }}" alt="Team 3" class="card-img-top">
                         <div class="card-body px-0">
                             <h5 class="card-title mb-0">Marama Petera</h5>
                             <p class=" font-weight-medium designation">Designer & Creative Director</p>
