@@ -26,7 +26,7 @@
 
 ## Communication
 
-If you have a question/query/suggestion, feel free to send an e-mail to [nwaweru@drash.co.ke](mailto:nwaweru@drash.co.ke).
+If you have a question/query/suggestion, feel free to send an e-mail to [ndiranguwaweru@gmail.com](mailto:ndiranguwaweru@gmail.com).
 
 ## License
 
