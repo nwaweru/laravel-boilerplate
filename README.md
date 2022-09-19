@@ -13,7 +13,6 @@
 
 1. [Laravel Sentry](https://github.com/getsentry/sentry-laravel)
 1. [Laravel Generators](https://github.com/laracasts/Laravel-5-Generators-Extended)
-1. [Laravel Test Factory Helper](https://github.com/mpociot/laravel-test-factory-helper)
 
 ## Installation
 

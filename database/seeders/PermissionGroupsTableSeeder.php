@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Traits\Utilities;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;

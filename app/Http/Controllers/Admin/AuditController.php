@@ -8,7 +8,7 @@ use Illuminate\Contracts\Support\Renderable;
 class AuditController extends Controller
 {
     /**
-     * Show the application dashboard.
+     * Show the application audit log.
      *
      * @return Renderable
      */

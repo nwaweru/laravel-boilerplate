@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\PermissionGroup;
 use App\Traits\Utilities;
 use Carbon\Carbon;
