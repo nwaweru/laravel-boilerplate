@@ -26,6 +26,7 @@ class RoleController extends Controller
      * Display a listing of the resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function index()
@@ -36,7 +37,7 @@ class RoleController extends Controller
             return DataTables::of(Role::query())
                 ->addColumn('name', function ($role) {
                     if (Auth::user()->can('roles.show')) {
-                        return '<a class="text-decoration-none" href="' . route('admin.roles.show', ['role' => $role->uuid]) . '">' . $role->name . '</a>';
+                        return '<a class="text-decoration-none" href="'.route('admin.roles.show', ['role' => $role->uuid]).'">'.$role->name.'</a>';
                     }
 
                     return $role->name;
@@ -50,6 +51,7 @@ class RoleController extends Controller
      * Show the form for creating a new resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function create()
@@ -64,8 +66,9 @@ class RoleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function store(Request $request)
@@ -90,7 +93,7 @@ class RoleController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -101,8 +104,9 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function show($uuid)
@@ -122,8 +126,9 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function edit($uuid)
@@ -144,9 +149,10 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param string $uuid
+     * @param  Request  $request
+     * @param  string  $uuid
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
@@ -168,7 +174,7 @@ class RoleController extends Controller
             $role->syncPermissions(Permission::whereIn('id', $request->permissions)->pluck('name'));
 
             return redirect()->route('admin.roles.show', ['role' => $role->uuid])->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Changes Saved',
                 ],
@@ -177,7 +183,7 @@ class RoleController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -188,8 +194,9 @@ class RoleController extends Controller
     /**
      * Display the specified resource selected for deletion.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function delete($uuid)
@@ -200,7 +207,7 @@ class RoleController extends Controller
 
         if (in_array($role->name, $this->getUserRoles(Auth::user()))) {
             return redirect()->route('admin.roles.index')->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Permission Denied',
                 ],
@@ -221,8 +228,9 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function destroy($uuid)
@@ -233,7 +241,7 @@ class RoleController extends Controller
 
         if (in_array($role->name, $this->getUserRoles(Auth::user()))) {
             return redirect()->route('admin.roles.index')->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Permission Denied',
                 ],
@@ -244,7 +252,7 @@ class RoleController extends Controller
             $role->delete();
 
             return redirect()->route('admin.roles.index')->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Role Deleted',
                 ],
@@ -253,7 +261,7 @@ class RoleController extends Controller
             Log::error($ex);
 
             return redirect()->back()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],

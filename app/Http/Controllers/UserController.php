@@ -26,6 +26,7 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @return Factory|View
+     *
      * @throws Exception
      */
     public function index()
@@ -35,12 +36,12 @@ class UserController extends Controller
         if (request()->ajax()) {
             return DataTables::of(User::query())
                 ->addColumn('name', function ($user) {
-                    $name = $user->first_name . ' ' . $user->last_name;
+                    $name = $user->first_name.' '.$user->last_name;
 
                     if (Auth::user()->can('users.show')) {
                         return '
-                            <a class="text-decoration-none" href="' . route('users.show', ['user' => $user->uuid]) . '">' . $name . '</a>
-                            <small class="float-right">' . $user->role . '</small>
+                            <a class="text-decoration-none" href="'.route('users.show', ['user' => $user->uuid]).'">'.$name.'</a>
+                            <small class="float-right">'.$user->role.'</small>
                         ';
                     }
 
@@ -70,7 +71,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Response
      */
     public function store(Request $request)
@@ -93,7 +94,7 @@ class UserController extends Controller
                 'password' => Hash::make($this->generateUuid()),
             ]);
 
-            if (!is_null($request->roles)) {
+            if (! is_null($request->roles)) {
                 $roles = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
                 $user->assignRole($roles);
             }
@@ -108,7 +109,7 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -123,7 +124,7 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Notification Error',
                 ],
@@ -134,7 +135,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response
      */
     public function show($uuid)
@@ -149,7 +150,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response
      */
     public function edit($uuid)
@@ -168,8 +169,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param string $uuid
+     * @param  Request  $request
+     * @param  string  $uuid
      * @return Response
      */
     public function update(Request $request, $uuid)
@@ -205,7 +206,7 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -216,7 +217,7 @@ class UserController extends Controller
     /**
      * Show the view for deleting the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response
      */
     public function delete($uuid)
@@ -234,7 +235,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response
      */
     public function destroy($uuid)
@@ -251,7 +252,7 @@ class UserController extends Controller
             Log::error($ex);
 
             return redirect()->back()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],

@@ -8,7 +8,6 @@ use Spatie\Dropbox\Client as DropboxClient;
 use Spatie\FlysystemDropbox\DropboxAdapter;
 use Storage;
 
-
 class DropboxServiceProvider extends ServiceProvider
 {
     /**

@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
             'last_name' => 'Waweru',
             'email' => 'nwaweru@drash.co.ke',
             'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
 
         // Create a normal user account.
@@ -38,14 +38,14 @@ class UsersTableSeeder extends Seeder
             'last_name' => 'Waweru',
             'email' => 'ndiranguwaweru@gmail.com',
             'email_verified_at' => Carbon::now(),
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
     }
 
     /**
      * Create a super user.
      *
-     * @param array $user
+     * @param  array  $user
      * @return void
      */
     private function createSuperUser($user)
@@ -63,7 +63,7 @@ class UsersTableSeeder extends Seeder
     /**
      * Create a normal user.
      *
-     * @param array $user
+     * @param  array  $user
      * @return void
      */
     private function createNormalUser($user)

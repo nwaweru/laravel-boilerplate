@@ -25,6 +25,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     protected $fillable = [
         'uuid', 'first_name', 'last_name', 'email', 'email_verified_at', 'password',
     ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -33,6 +34,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -63,7 +65,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     /**
      * Send the email verification notification.
      *
-     * @param string $token
+     * @param  string  $token
      * @return void
      */
     public function sendEmailVerificationNotification()
@@ -74,7 +76,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     /**
      * Send the password reset notification.
      *
-     * @param string $token
+     * @param  string  $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
@@ -111,7 +113,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     /**
      * Route notifications for the Slack channel.
      *
-     * @param Notification $notification
+     * @param  Notification  $notification
      * @return string
      */
     public function routeNotificationForSlack($notification)

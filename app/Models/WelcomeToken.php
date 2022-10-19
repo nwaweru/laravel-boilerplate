@@ -12,18 +12,21 @@ class WelcomeToken extends Model
      * @var bool
      */
     public $incrementing = false;
+
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
+
     /**
      * The primary key associated with the table.
      *
      * @var string
      */
     protected $primaryKey = 'user_id';
+
     /**
      * The attributes that are mass assignable.
      *

@@ -11,13 +11,13 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\DataTables;
-use Illuminate\Support\Facades\Artisan;
 
 class PermissionController extends Controller
 {
@@ -27,6 +27,7 @@ class PermissionController extends Controller
      * Display a listing of the resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function index()
@@ -40,7 +41,7 @@ class PermissionController extends Controller
                 })
                 ->addColumn('display_name', function ($permission) {
                     if (Auth::user()->can('permissions.show')) {
-                        return '<a class="text-decoration-none" href="' . route('admin.permissions.show', ['permission' => $permission->uuid]) . '">' . $permission->display_name . '</a>';
+                        return '<a class="text-decoration-none" href="'.route('admin.permissions.show', ['permission' => $permission->uuid]).'">'.$permission->display_name.'</a>';
                     }
 
                     return $permission->display_name;
@@ -56,6 +57,7 @@ class PermissionController extends Controller
      * Show the form for creating a new resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function create()
@@ -72,8 +74,9 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function store(Request $request)
@@ -83,7 +86,7 @@ class PermissionController extends Controller
         $request->validate([
             'permission_group' => ['required', 'exists:permission_groups,id'],
             'name' => ['required', 'string', 'max:255', 'unique:permissions,name'],
-            'display_name' => ['required', 'string', 'max:255',],
+            'display_name' => ['required', 'string', 'max:255'],
         ]);
 
         try {
@@ -99,7 +102,7 @@ class PermissionController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -110,8 +113,9 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function show($uuid)
@@ -127,8 +131,9 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function edit($uuid)
@@ -144,9 +149,10 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param string $uuid
+     * @param  Request  $request
+     * @param  string  $uuid
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
@@ -173,7 +179,7 @@ class PermissionController extends Controller
             Log::error($ex);
 
             return redirect()->back()->withInput()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],
@@ -184,8 +190,9 @@ class PermissionController extends Controller
     /**
      * Display the specified resource selected for deletion.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return View|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function delete($uuid)
@@ -205,8 +212,9 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $uuid
+     * @param  string  $uuid
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function destroy($uuid)
@@ -231,7 +239,7 @@ class PermissionController extends Controller
             Artisan::call('cache:clear');
 
             return redirect()->route('admin.permissions.index')->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'success',
                     'text' => 'Permission Deleted',
                 ],
@@ -240,7 +248,7 @@ class PermissionController extends Controller
             Log::error($ex);
 
             return redirect()->back()->with([
-                'alert' => (object)[
+                'alert' => (object) [
                     'type' => 'danger',
                     'text' => 'Database Error',
                 ],

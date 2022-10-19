@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Auth;
 
 class PermissionGroupController extends Controller
 {
@@ -24,6 +23,7 @@ class PermissionGroupController extends Controller
      * Show the form for creating a new resource.
      *
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function create()
@@ -36,8 +36,9 @@ class PermissionGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return Response|RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function store(Request $request)
@@ -49,14 +50,13 @@ class PermissionGroupController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:permission_groups,name'],
         ]);
 
-
         // try {
         $permissionGroup = PermissionGroup::create([
             'uuid' => $this->generateUuid(),
             'name' => $request->name,
         ]);
 
-        if (!is_null($request->permission)) {
+        if (! is_null($request->permission)) {
             $permission = Permission::where('uuid', $request->permission)->firstOrFail();
 
             return redirect()->route('admin.permissions.edit', [
@@ -81,9 +81,10 @@ class PermissionGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param string $uuid
-     * @param Request $request
+     * @param  string  $uuid
+     * @param  Request  $request
      * @return View
+     *
      * @throws AuthorizationException
      */
     public function edit($uuid, Request $request)
@@ -100,9 +101,10 @@ class PermissionGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param string $uuid
+     * @param  Request  $request
+     * @param  string  $uuid
      * @return RedirectResponse
+     *
      * @throws AuthorizationException
      */
     public function update(Request $request, $uuid)
@@ -146,7 +148,7 @@ class PermissionGroupController extends Controller
      */
     private function verifyRequest(Request $request)
     {
-        if (!$request->has('permission') || is_null($request->permission)) {
+        if (! $request->has('permission') || is_null($request->permission)) {
             abort(404);
         }
 
@@ -161,7 +163,7 @@ class PermissionGroupController extends Controller
     private function deleteEmptyPermissionGroups($excluded)
     {
         foreach (PermissionGroup::all() as $group) {
-            if (!$group->permissions->count() && $group->uuid !== $excluded) {
+            if (! $group->permissions->count() && $group->uuid !== $excluded) {
                 try {
                     $group->delete();
                 } catch (Exception $ex) {

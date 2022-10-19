@@ -17,8 +17,8 @@ class WelcomeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Request $request
-     * @param uuid $token
+     * @param  Request  $request
+     * @param  uuid  $token
      * @return Response
      */
     public function setPassword(Request $request, $token)
@@ -48,7 +48,7 @@ class WelcomeController extends Controller
                 Log::error($ex);
 
                 return redirect()->back()->with([
-                    'alert' => (object)[
+                    'alert' => (object) [
                         'type' => 'danger',
                         'text' => 'Database Error',
                     ],
